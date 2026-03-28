@@ -1,0 +1,251 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf8">
+  <title>Explore page</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: orange;
+    }
+
+    #svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+    }
+
+    svg {
+      width: 100%;
+      height: 100vh;
+    }
+
+    #svg-section {
+      position: relative;
+    }
+
+    #unit-place-holder {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+<link rel="stylesheet" href="main.css"></head>
+
+<body>
+  <div id="booking-controls">
+    <div class="booking-control booking-control-field">
+      <input id="date-range-picker" type="text" name="daterange" placeholder="Select Date Range" aria-label="Select date range">
+    </div>
+    <div class="booking-control booking-control-field">
+      <select id="square-footage" placeholder="Minimum Space" aria-label="Minimum space">
+        <option selected="selected" value="0" disabled="">Minimum Space</option>
+        <option value="0">Any size</option>
+        <option value="0-200">Less than 200 sqft</option>
+        <option value="200-500">200 - 500 sqft</option>
+        <option value="500">Greater than 500</option>
+      </select>
+    </div>
+    <div class="booking-control booking-control-action">
+      <button id="reset-filters" type="button" aria-label="Reset filters" title="Reset filters">
+        <span class="reset-filters-icon" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+  <div id="svg-section">
+    <div class="svg-container">
+      <div id="svg"></div>
+    </div>
+  </div>
+  <div id="booking-toast" role="status" aria-live="polite"></div>
+  <div id="unit-place-holder" data-w-id="d4b53ce7-3a42-d2c8-c047-67024ee09f27" data-wf-id="[&quot;d4b53ce7-3a42-d2c8-c047-67024ee09f27&quot;]" class="div-block-53"></div>
+  <div id="enquiry-general-form" data-w-id="a6f43a17-1679-fc7e-2ba6-3e23928b4616" data-wf-id="[&quot;a6f43a17-1679-fc7e-2ba6-3e23928b4616&quot;]" class="div-block-62">
+    <div data-w-id="ca488f07-28a6-ca7c-9356-48d54e77b5f2" data-wf-id="[&quot;ca488f07-28a6-ca7c-9356-48d54e77b5f2&quot;]" class="text-block-11">Enquiry<br data-w-id="0b235d69-1af1-8961-bf87-07d4d26e8cf9" data-wf-id="[&quot;0b235d69-1af1-8961-bf87-07d4d26e8cf9&quot;,&quot;LineBreak&quot;]">Form</div>
+    <div data-w-id="94127ceb-d9f0-329a-68e8-7262da3c9fa7" data-wf-id="[&quot;94127ceb-d9f0-329a-68e8-7262da3c9fa7&quot;]" class="text-block-12">Fill the form for a general
+      enquiry</div>
+    <div data-w-id="f2358faa-725d-5485-fa75-3e1eca498463" data-wf-id="[&quot;f2358faa-725d-5485-fa75-3e1eca498463&quot;]">
+      <div data-w-id="f2358faa-725d-5485-fa75-3e1eca498464" data-wf-id="[&quot;f2358faa-725d-5485-fa75-3e1eca498464&quot;]" class="enquire-now-button">
+        <div data-w-id="f2358faa-725d-5485-fa75-3e1eca498465" data-wf-id="[&quot;f2358faa-725d-5485-fa75-3e1eca498465&quot;]">Enquire Now</div><img src="https://cdn.prod.website-files.com/69aee66a95ba28fa2df4a372/69c1b483272feb5b01adb724_Arrow%204.svg" loading="lazy" data-wf-id="[&quot;f2358faa-725d-5485-fa75-3e1eca498467&quot;]" data-w-id="f2358faa-725d-5485-fa75-3e1eca498467" alt="">
+      </div>
+    </div>
+  </div>
+  <div id="spaces-list" data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae2" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae2&quot;]" class="w-condition-invisible w-dyn-list">
+    <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae3" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae3&quot;]" role="list" class="w-dyn-items">
+      <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-0" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-0&quot;]" data-dyn-label="Collection Item 1" role="listitem" class="collection-item-9 wf-grid w-dyn-item">
+        <div data-by="images" data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea4_instance-0" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea4_instance-0&quot;]" class="wf-no-items w-dyn-list">
+          <script type="text/x-wf-template" id="wf-template-6051ba4c-955a-2057-fff8-355ec1901ea5">%3Cdiv%20data-w-id%3D%226051ba4c-955a-2057-fff8-355ec1901ea6_instance-0-0%22%20data-wf-id%3D%22%5B%26quot%3B6051ba4c-955a-2057-fff8-355ec1901ea6_instance-0-0%26quot%3B%5D%22%20data-dyn-label%3D%22Image%201%22%20role%3D%22listitem%22%20class%3D%22w-dyn-item%20w-dyn-repeater-item%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fd3e54v103j8qbb.cloudfront.net%2Fplugins%2FBasic%2Fassets%2Fplaceholder.60f9b1840c.svg%22%20loading%3D%22lazy%22%20data-wf-id%3D%22%5B%26quot%3Ba88721b7-8254-d81b-34de-69e75a127636_instance-0-0%26quot%3B%5D%22%20data-w-id%3D%22a88721b7-8254-d81b-34de-69e75a127636_instance-0-0%22%20alt%3D%22%22%20class%3D%22image-21%20w-dyn-bind-empty%22%2F%3E%3C%2Fdiv%3E</script>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea5_instance-0" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea5_instance-0&quot;]" role="list" class="collection-list-8 w-dyn-items w-dyn-hide"></div>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea7_instance-0" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea7_instance-0&quot;]" class="w-dyn-empty">
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea8_instance-0" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea8_instance-0&quot;]">No items found.</div>
+          </div>
+        </div>
+        <div data-by="name" data-w-id="0275497e-f6ac-036c-aba3-3b7bea924595_instance-0" data-wf-id="[&quot;0275497e-f6ac-036c-aba3-3b7bea924595_instance-0&quot;]" data-has-binding-on-children="true" class="text-block-9">Unit 218</div>
+        <div data-w-id="ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-0" data-wf-id="[&quot;ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-0&quot;]" class="div-block-52">
+          <div data-by="square-footage" data-w-id="c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-0" data-wf-id="[&quot;c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-0&quot;]" data-has-binding-on-children="true" class="text-block-10">870</div>
+          <div data-w-id="c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-0" data-wf-id="[&quot;c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-0&quot;]">Sq Ft</div>
+        </div><a data-wf-target="[[[&quot;69bd331bc7acd24e43e6a756&quot;,&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5&quot;],[]]]" data-w-id="65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-0" data-wf-id="[&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-0&quot;]" href="#" class="enquire-now-button w-button">Enquire Now</a>
+      </div>
+      <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-1" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-1&quot;]" data-dyn-label="Collection Item 2" role="listitem" class="collection-item-9 wf-grid w-dyn-item">
+        <div data-by="images" data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea4_instance-1" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea4_instance-1&quot;]" class="wf-no-items w-dyn-list">
+          <script type="text/x-wf-template" id="wf-template-6051ba4c-955a-2057-fff8-355ec1901ea5">%3Cdiv%20data-w-id%3D%226051ba4c-955a-2057-fff8-355ec1901ea6_instance-1-0%22%20data-wf-id%3D%22%5B%26quot%3B6051ba4c-955a-2057-fff8-355ec1901ea6_instance-1-0%26quot%3B%5D%22%20data-dyn-label%3D%22Image%201%22%20role%3D%22listitem%22%20class%3D%22w-dyn-item%20w-dyn-repeater-item%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fd3e54v103j8qbb.cloudfront.net%2Fplugins%2FBasic%2Fassets%2Fplaceholder.60f9b1840c.svg%22%20loading%3D%22lazy%22%20data-wf-id%3D%22%5B%26quot%3Ba88721b7-8254-d81b-34de-69e75a127636_instance-1-0%26quot%3B%5D%22%20data-w-id%3D%22a88721b7-8254-d81b-34de-69e75a127636_instance-1-0%22%20alt%3D%22%22%20class%3D%22image-21%20w-dyn-bind-empty%22%2F%3E%3C%2Fdiv%3E</script>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea5_instance-1" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea5_instance-1&quot;]" role="list" class="collection-list-8 w-dyn-items w-dyn-hide"></div>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea7_instance-1" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea7_instance-1&quot;]" class="w-dyn-empty">
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea8_instance-1" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea8_instance-1&quot;]">No items found.</div>
+          </div>
+        </div>
+        <div data-by="name" data-w-id="0275497e-f6ac-036c-aba3-3b7bea924595_instance-1" data-wf-id="[&quot;0275497e-f6ac-036c-aba3-3b7bea924595_instance-1&quot;]" data-has-binding-on-children="true" class="text-block-9">Unit 232A</div>
+        <div data-w-id="ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-1" data-wf-id="[&quot;ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-1&quot;]" class="div-block-52">
+          <div data-by="square-footage" data-w-id="c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-1" data-wf-id="[&quot;c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-1&quot;]" data-has-binding-on-children="true" class="text-block-10">820</div>
+          <div data-w-id="c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-1" data-wf-id="[&quot;c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-1&quot;]">Sq Ft</div>
+        </div><a data-wf-target="[[[&quot;69bd331bc7acd24e43e6a756&quot;,&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5&quot;],[]]]" data-w-id="65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-1" data-wf-id="[&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-1&quot;]" href="#" class="enquire-now-button w-button">Enquire Now</a>
+      </div>
+      <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-2" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-2&quot;]" data-dyn-label="Collection Item 3" role="listitem" class="collection-item-9 wf-grid w-dyn-item">
+        <div data-by="images" data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea4_instance-2" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea4_instance-2&quot;]" class="wf-no-items w-dyn-list">
+          <script type="text/x-wf-template" id="wf-template-6051ba4c-955a-2057-fff8-355ec1901ea5">%3Cdiv%20data-w-id%3D%226051ba4c-955a-2057-fff8-355ec1901ea6_instance-2-0%22%20data-wf-id%3D%22%5B%26quot%3B6051ba4c-955a-2057-fff8-355ec1901ea6_instance-2-0%26quot%3B%5D%22%20data-dyn-label%3D%22Image%201%22%20role%3D%22listitem%22%20class%3D%22w-dyn-item%20w-dyn-repeater-item%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fd3e54v103j8qbb.cloudfront.net%2Fplugins%2FBasic%2Fassets%2Fplaceholder.60f9b1840c.svg%22%20loading%3D%22lazy%22%20data-wf-id%3D%22%5B%26quot%3Ba88721b7-8254-d81b-34de-69e75a127636_instance-2-0%26quot%3B%5D%22%20data-w-id%3D%22a88721b7-8254-d81b-34de-69e75a127636_instance-2-0%22%20alt%3D%22%22%20class%3D%22image-21%20w-dyn-bind-empty%22%2F%3E%3C%2Fdiv%3E</script>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea5_instance-2" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea5_instance-2&quot;]" role="list" class="collection-list-8 w-dyn-items w-dyn-hide"></div>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea7_instance-2" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea7_instance-2&quot;]" class="w-dyn-empty">
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea8_instance-2" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea8_instance-2&quot;]">No items found.</div>
+          </div>
+        </div>
+        <div data-by="name" data-w-id="0275497e-f6ac-036c-aba3-3b7bea924595_instance-2" data-wf-id="[&quot;0275497e-f6ac-036c-aba3-3b7bea924595_instance-2&quot;]" data-has-binding-on-children="true" class="text-block-9">Unit 009</div>
+        <div data-w-id="ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-2" data-wf-id="[&quot;ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-2&quot;]" class="div-block-52">
+          <div data-by="square-footage" data-w-id="c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-2" data-wf-id="[&quot;c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-2&quot;]" data-has-binding-on-children="true" class="text-block-10">770</div>
+          <div data-w-id="c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-2" data-wf-id="[&quot;c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-2&quot;]">Sq Ft</div>
+        </div><a data-wf-target="[[[&quot;69bd331bc7acd24e43e6a756&quot;,&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5&quot;],[]]]" data-w-id="65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-2" data-wf-id="[&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-2&quot;]" href="#" class="enquire-now-button w-button">Enquire Now</a>
+      </div>
+      <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-3" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-3&quot;]" data-dyn-label="Collection Item 4" role="listitem" class="collection-item-9 wf-grid w-dyn-item">
+        <div data-by="images" data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea4_instance-3" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea4_instance-3&quot;]" class="wf-no-items w-dyn-list">
+          <script type="text/x-wf-template" id="wf-template-6051ba4c-955a-2057-fff8-355ec1901ea5">%3Cdiv%20data-w-id%3D%226051ba4c-955a-2057-fff8-355ec1901ea6_instance-3-0%22%20data-wf-id%3D%22%5B%26quot%3B6051ba4c-955a-2057-fff8-355ec1901ea6_instance-3-0%26quot%3B%5D%22%20data-dyn-label%3D%22Image%201%22%20role%3D%22listitem%22%20class%3D%22w-dyn-item%20w-dyn-repeater-item%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fd3e54v103j8qbb.cloudfront.net%2Fplugins%2FBasic%2Fassets%2Fplaceholder.60f9b1840c.svg%22%20loading%3D%22lazy%22%20data-wf-id%3D%22%5B%26quot%3Ba88721b7-8254-d81b-34de-69e75a127636_instance-3-0%26quot%3B%5D%22%20data-w-id%3D%22a88721b7-8254-d81b-34de-69e75a127636_instance-3-0%22%20alt%3D%22%22%20class%3D%22image-21%20w-dyn-bind-empty%22%2F%3E%3C%2Fdiv%3E</script>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea5_instance-3" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea5_instance-3&quot;]" role="list" class="collection-list-8 w-dyn-items w-dyn-hide"></div>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea7_instance-3" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea7_instance-3&quot;]" class="w-dyn-empty">
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea8_instance-3" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea8_instance-3&quot;]">No items found.</div>
+          </div>
+        </div>
+        <div data-by="name" data-w-id="0275497e-f6ac-036c-aba3-3b7bea924595_instance-3" data-wf-id="[&quot;0275497e-f6ac-036c-aba3-3b7bea924595_instance-3&quot;]" data-has-binding-on-children="true" class="text-block-9">Unit 007</div>
+        <div data-w-id="ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-3" data-wf-id="[&quot;ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-3&quot;]" class="div-block-52">
+          <div data-by="square-footage" data-w-id="c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-3" data-wf-id="[&quot;c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-3&quot;]" data-has-binding-on-children="true" class="text-block-10">720</div>
+          <div data-w-id="c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-3" data-wf-id="[&quot;c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-3&quot;]">Sq Ft</div>
+        </div><a data-wf-target="[[[&quot;69bd331bc7acd24e43e6a756&quot;,&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5&quot;],[]]]" data-w-id="65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-3" data-wf-id="[&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-3&quot;]" href="#" class="enquire-now-button w-button">Enquire Now</a>
+      </div>
+      <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-4" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-4&quot;]" data-dyn-label="Collection Item 5" role="listitem" class="collection-item-9 wf-grid w-dyn-item">
+        <div data-by="images" data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea4_instance-4" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea4_instance-4&quot;]" class="wf-no-items w-dyn-list">
+          <script type="text/x-wf-template" id="wf-template-6051ba4c-955a-2057-fff8-355ec1901ea5">%3Cdiv%20data-w-id%3D%226051ba4c-955a-2057-fff8-355ec1901ea6_instance-4-0%22%20data-wf-id%3D%22%5B%26quot%3B6051ba4c-955a-2057-fff8-355ec1901ea6_instance-4-0%26quot%3B%5D%22%20data-dyn-label%3D%22Image%201%22%20role%3D%22listitem%22%20class%3D%22w-dyn-item%20w-dyn-repeater-item%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fd3e54v103j8qbb.cloudfront.net%2Fplugins%2FBasic%2Fassets%2Fplaceholder.60f9b1840c.svg%22%20loading%3D%22lazy%22%20data-wf-id%3D%22%5B%26quot%3Ba88721b7-8254-d81b-34de-69e75a127636_instance-4-0%26quot%3B%5D%22%20data-w-id%3D%22a88721b7-8254-d81b-34de-69e75a127636_instance-4-0%22%20alt%3D%22%22%20class%3D%22image-21%20w-dyn-bind-empty%22%2F%3E%3C%2Fdiv%3E</script>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea5_instance-4" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea5_instance-4&quot;]" role="list" class="collection-list-8 w-dyn-items w-dyn-hide"></div>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea7_instance-4" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea7_instance-4&quot;]" class="w-dyn-empty">
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea8_instance-4" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea8_instance-4&quot;]">No items found.</div>
+          </div>
+        </div>
+        <div data-by="name" data-w-id="0275497e-f6ac-036c-aba3-3b7bea924595_instance-4" data-wf-id="[&quot;0275497e-f6ac-036c-aba3-3b7bea924595_instance-4&quot;]" data-has-binding-on-children="true" class="text-block-9">Unit 006</div>
+        <div data-w-id="ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-4" data-wf-id="[&quot;ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-4&quot;]" class="div-block-52">
+          <div data-by="square-footage" data-w-id="c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-4" data-wf-id="[&quot;c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-4&quot;]" data-has-binding-on-children="true" class="text-block-10">730</div>
+          <div data-w-id="c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-4" data-wf-id="[&quot;c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-4&quot;]">Sq Ft</div>
+        </div><a data-wf-target="[[[&quot;69bd331bc7acd24e43e6a756&quot;,&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5&quot;],[]]]" data-w-id="65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-4" data-wf-id="[&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-4&quot;]" href="#" class="enquire-now-button w-button">Enquire Now</a>
+      </div>
+      <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-5" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-5&quot;]" data-dyn-label="Collection Item 6" role="listitem" class="collection-item-9 wf-grid w-dyn-item">
+        <div data-by="images" data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea4_instance-5" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea4_instance-5&quot;]" class="wf-no-items w-dyn-list">
+          <script type="text/x-wf-template" id="wf-template-6051ba4c-955a-2057-fff8-355ec1901ea5">%3Cdiv%20data-w-id%3D%226051ba4c-955a-2057-fff8-355ec1901ea6_instance-5-0%22%20data-wf-id%3D%22%5B%26quot%3B6051ba4c-955a-2057-fff8-355ec1901ea6_instance-5-0%26quot%3B%5D%22%20data-dyn-label%3D%22Image%201%22%20role%3D%22listitem%22%20class%3D%22w-dyn-item%20w-dyn-repeater-item%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fd3e54v103j8qbb.cloudfront.net%2Fplugins%2FBasic%2Fassets%2Fplaceholder.60f9b1840c.svg%22%20loading%3D%22lazy%22%20data-wf-id%3D%22%5B%26quot%3Ba88721b7-8254-d81b-34de-69e75a127636_instance-5-0%26quot%3B%5D%22%20data-w-id%3D%22a88721b7-8254-d81b-34de-69e75a127636_instance-5-0%22%20alt%3D%22%22%20class%3D%22image-21%20w-dyn-bind-empty%22%2F%3E%3C%2Fdiv%3E</script>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea5_instance-5" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea5_instance-5&quot;]" role="list" class="collection-list-8 w-dyn-items w-dyn-hide"></div>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea7_instance-5" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea7_instance-5&quot;]" class="w-dyn-empty">
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea8_instance-5" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea8_instance-5&quot;]">No items found.</div>
+          </div>
+        </div>
+        <div data-by="name" data-w-id="0275497e-f6ac-036c-aba3-3b7bea924595_instance-5" data-wf-id="[&quot;0275497e-f6ac-036c-aba3-3b7bea924595_instance-5&quot;]" data-has-binding-on-children="true" class="text-block-9">Unit 220</div>
+        <div data-w-id="ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-5" data-wf-id="[&quot;ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-5&quot;]" class="div-block-52">
+          <div data-by="square-footage" data-w-id="c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-5" data-wf-id="[&quot;c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-5&quot;]" data-has-binding-on-children="true" class="text-block-10">290</div>
+          <div data-w-id="c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-5" data-wf-id="[&quot;c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-5&quot;]">Sq Ft</div>
+        </div><a data-wf-target="[[[&quot;69bd331bc7acd24e43e6a756&quot;,&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5&quot;],[]]]" data-w-id="65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-5" data-wf-id="[&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-5&quot;]" href="#" class="enquire-now-button w-button">Enquire Now</a>
+      </div>
+      <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-6" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-6&quot;]" data-dyn-label="Collection Item 7" role="listitem" class="collection-item-9 wf-grid w-dyn-item">
+        <div data-by="images" data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea4_instance-6" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea4_instance-6&quot;]" class="wf-no-items w-dyn-list">
+          <script type="text/x-wf-template" id="wf-template-6051ba4c-955a-2057-fff8-355ec1901ea5">%3Cdiv%20data-w-id%3D%226051ba4c-955a-2057-fff8-355ec1901ea6_instance-6-0%22%20data-wf-id%3D%22%5B%26quot%3B6051ba4c-955a-2057-fff8-355ec1901ea6_instance-6-0%26quot%3B%5D%22%20data-dyn-label%3D%22Image%201%22%20role%3D%22listitem%22%20class%3D%22w-dyn-item%20w-dyn-repeater-item%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fd3e54v103j8qbb.cloudfront.net%2Fplugins%2FBasic%2Fassets%2Fplaceholder.60f9b1840c.svg%22%20loading%3D%22lazy%22%20data-wf-id%3D%22%5B%26quot%3Ba88721b7-8254-d81b-34de-69e75a127636_instance-6-0%26quot%3B%5D%22%20data-w-id%3D%22a88721b7-8254-d81b-34de-69e75a127636_instance-6-0%22%20alt%3D%22%22%20class%3D%22image-21%20w-dyn-bind-empty%22%2F%3E%3C%2Fdiv%3E</script>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea5_instance-6" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea5_instance-6&quot;]" role="list" class="collection-list-8 w-dyn-items w-dyn-hide"></div>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea7_instance-6" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea7_instance-6&quot;]" class="w-dyn-empty">
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea8_instance-6" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea8_instance-6&quot;]">No items found.</div>
+          </div>
+        </div>
+        <div data-by="name" data-w-id="0275497e-f6ac-036c-aba3-3b7bea924595_instance-6" data-wf-id="[&quot;0275497e-f6ac-036c-aba3-3b7bea924595_instance-6&quot;]" data-has-binding-on-children="true" class="text-block-9">Unit 222</div>
+        <div data-w-id="ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-6" data-wf-id="[&quot;ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-6&quot;]" class="div-block-52">
+          <div data-by="square-footage" data-w-id="c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-6" data-wf-id="[&quot;c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-6&quot;]" data-has-binding-on-children="true" class="text-block-10">800</div>
+          <div data-w-id="c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-6" data-wf-id="[&quot;c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-6&quot;]">Sq Ft</div>
+        </div><a data-wf-target="[[[&quot;69bd331bc7acd24e43e6a756&quot;,&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5&quot;],[]]]" data-w-id="65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-6" data-wf-id="[&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-6&quot;]" href="#" class="enquire-now-button w-button">Enquire Now</a>
+      </div>
+      <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-7" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-7&quot;]" data-dyn-label="Collection Item 8" role="listitem" class="collection-item-9 wf-grid w-dyn-item">
+        <div data-by="images" data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea4_instance-7" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea4_instance-7&quot;]" class="w-dyn-list">
+          <script type="text/x-wf-template" id="wf-template-6051ba4c-955a-2057-fff8-355ec1901ea5">%3Cdiv%20data-w-id%3D%226051ba4c-955a-2057-fff8-355ec1901ea6_instance-7-0%22%20data-wf-id%3D%22%5B%26quot%3B6051ba4c-955a-2057-fff8-355ec1901ea6_instance-7-0%26quot%3B%5D%22%20data-dyn-label%3D%22Frame%20117.jpg%22%20role%3D%22listitem%22%20class%3D%22w-dyn-item%20w-dyn-repeater-item%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fcdn.prod.website-files.com%2F69b2bc331705e9db3e741005%2F69bfdebf6ee673d7e832a7f4_Frame%2520117.jpg%22%20loading%3D%22lazy%22%20data-wf-id%3D%22%5B%26quot%3Ba88721b7-8254-d81b-34de-69e75a127636_instance-7-0%26quot%3B%5D%22%20data-w-id%3D%22a88721b7-8254-d81b-34de-69e75a127636_instance-7-0%22%20alt%3D%22%22%20class%3D%22image-21%22%2F%3E%3C%2Fdiv%3E</script>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea5_instance-7" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea5_instance-7&quot;]" role="list" class="collection-list-8 w-dyn-items">
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea6_instance-7-0" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea6_instance-7-0&quot;]" data-dyn-label="Frame 117.jpg" role="listitem" class="w-dyn-item w-dyn-repeater-item"><img src="https://cdn.prod.website-files.com/69b2bc331705e9db3e741005/69bfdebf6ee673d7e832a7f4_Frame%20117.jpg" loading="lazy" data-wf-id="[&quot;a88721b7-8254-d81b-34de-69e75a127636_instance-7-0&quot;]" data-w-id="a88721b7-8254-d81b-34de-69e75a127636_instance-7-0" alt="" class="image-21"></div>
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea6_instance-7-1" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea6_instance-7-1&quot;]" data-dyn-label="Frame 7 (3).jpg" role="listitem" class="w-dyn-item w-dyn-repeater-item"><img src="https://cdn.prod.website-files.com/69b2bc331705e9db3e741005/69c025733adef1023cd00494_Frame%207%20(3).jpg" loading="lazy" data-wf-id="[&quot;a88721b7-8254-d81b-34de-69e75a127636_instance-7-1&quot;]" data-w-id="a88721b7-8254-d81b-34de-69e75a127636_instance-7-1" alt="" class="image-21"></div>
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea6_instance-7-2" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea6_instance-7-2&quot;]" data-dyn-label="Frame 7 (2).jpg" role="listitem" class="w-dyn-item w-dyn-repeater-item"><img src="https://cdn.prod.website-files.com/69b2bc331705e9db3e741005/69c0257791418b929345d523_Frame%207%20(2).jpg" loading="lazy" data-wf-id="[&quot;a88721b7-8254-d81b-34de-69e75a127636_instance-7-2&quot;]" data-w-id="a88721b7-8254-d81b-34de-69e75a127636_instance-7-2" alt="" class="image-21"></div>
+          </div>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea7_instance-7" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea7_instance-7&quot;]" class="w-dyn-hide w-dyn-empty">
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea8_instance-7" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea8_instance-7&quot;]">No items found.</div>
+          </div>
+        </div>
+        <div data-by="name" data-w-id="0275497e-f6ac-036c-aba3-3b7bea924595_instance-7" data-wf-id="[&quot;0275497e-f6ac-036c-aba3-3b7bea924595_instance-7&quot;]" data-has-binding-on-children="true" class="text-block-9">Unit 210</div>
+        <div data-w-id="ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-7" data-wf-id="[&quot;ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-7&quot;]" class="div-block-52">
+          <div data-by="square-footage" data-w-id="c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-7" data-wf-id="[&quot;c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-7&quot;]" data-has-binding-on-children="true" class="text-block-10">140</div>
+          <div data-w-id="c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-7" data-wf-id="[&quot;c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-7&quot;]">Sq Ft</div>
+        </div><a data-wf-target="[[[&quot;69bd331bc7acd24e43e6a756&quot;,&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5&quot;],[]]]" data-w-id="65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-7" data-wf-id="[&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-7&quot;]" href="#" class="enquire-now-button w-button">Enquire Now</a>
+      </div>
+      <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-8" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae4_instance-8&quot;]" data-dyn-label="Collection Item 9" role="listitem" class="collection-item-9 wf-grid w-dyn-item">
+        <div data-by="images" data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea4_instance-8" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea4_instance-8&quot;]" class="w-dyn-list">
+          <script type="text/x-wf-template" id="wf-template-6051ba4c-955a-2057-fff8-355ec1901ea5">%3Cdiv%20data-w-id%3D%226051ba4c-955a-2057-fff8-355ec1901ea6_instance-8-0%22%20data-wf-id%3D%22%5B%26quot%3B6051ba4c-955a-2057-fff8-355ec1901ea6_instance-8-0%26quot%3B%5D%22%20data-dyn-label%3D%22Screenshot%202026-01-21%20at%2000.46.53%201.jpg%22%20role%3D%22listitem%22%20class%3D%22w-dyn-item%20w-dyn-repeater-item%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fcdn.prod.website-files.com%2F69b2bc331705e9db3e741005%2F69bfde50a5bf74cab2507487_Screenshot%25202026-01-21%2520at%252000.46.53%25201.jpg%22%20loading%3D%22lazy%22%20data-wf-id%3D%22%5B%26quot%3Ba88721b7-8254-d81b-34de-69e75a127636_instance-8-0%26quot%3B%5D%22%20data-w-id%3D%22a88721b7-8254-d81b-34de-69e75a127636_instance-8-0%22%20alt%3D%22%22%20class%3D%22image-21%22%2F%3E%3C%2Fdiv%3E</script>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea5_instance-8" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea5_instance-8&quot;]" role="list" class="collection-list-8 w-dyn-items">
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea6_instance-8-0" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea6_instance-8-0&quot;]" data-dyn-label="Screenshot 2026-01-21 at 00.46.53 1.jpg" role="listitem" class="w-dyn-item w-dyn-repeater-item"><img src="https://cdn.prod.website-files.com/69b2bc331705e9db3e741005/69bfde50a5bf74cab2507487_Screenshot%202026-01-21%20at%2000.46.53%201.jpg" loading="lazy" data-wf-id="[&quot;a88721b7-8254-d81b-34de-69e75a127636_instance-8-0&quot;]" data-w-id="a88721b7-8254-d81b-34de-69e75a127636_instance-8-0" alt="" class="image-21"></div>
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea6_instance-8-1" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea6_instance-8-1&quot;]" data-dyn-label="Frame 7 (6).jpg" role="listitem" class="w-dyn-item w-dyn-repeater-item"><img src="https://cdn.prod.website-files.com/69b2bc331705e9db3e741005/69c025c397a8ce069ceb9666_Frame%207%20(6).jpg" loading="lazy" data-wf-id="[&quot;a88721b7-8254-d81b-34de-69e75a127636_instance-8-1&quot;]" data-w-id="a88721b7-8254-d81b-34de-69e75a127636_instance-8-1" alt="" class="image-21"></div>
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea6_instance-8-2" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea6_instance-8-2&quot;]" data-dyn-label="Frame 7 (5).jpg" role="listitem" class="w-dyn-item w-dyn-repeater-item"><img src="https://cdn.prod.website-files.com/69b2bc331705e9db3e741005/69c025c36ca028e4398da2b9_Frame%207%20(5).jpg" loading="lazy" data-wf-id="[&quot;a88721b7-8254-d81b-34de-69e75a127636_instance-8-2&quot;]" data-w-id="a88721b7-8254-d81b-34de-69e75a127636_instance-8-2" alt="" class="image-21"></div>
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea6_instance-8-3" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea6_instance-8-3&quot;]" data-dyn-label="Frame 7 (4).jpg" role="listitem" class="w-dyn-item w-dyn-repeater-item"><img src="https://cdn.prod.website-files.com/69b2bc331705e9db3e741005/69c025c384ea4c6ef179bb37_Frame%207%20(4).jpg" loading="lazy" data-wf-id="[&quot;a88721b7-8254-d81b-34de-69e75a127636_instance-8-3&quot;]" data-w-id="a88721b7-8254-d81b-34de-69e75a127636_instance-8-3" alt="" class="image-21"></div>
+          </div>
+          <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea7_instance-8" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea7_instance-8&quot;]" class="w-dyn-hide w-dyn-empty">
+            <div data-w-id="6051ba4c-955a-2057-fff8-355ec1901ea8_instance-8" data-wf-id="[&quot;6051ba4c-955a-2057-fff8-355ec1901ea8_instance-8&quot;]">No items found.</div>
+          </div>
+        </div>
+        <div data-by="name" data-w-id="0275497e-f6ac-036c-aba3-3b7bea924595_instance-8" data-wf-id="[&quot;0275497e-f6ac-036c-aba3-3b7bea924595_instance-8&quot;]" data-has-binding-on-children="true" class="text-block-9">Unit 106</div>
+        <div data-w-id="ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-8" data-wf-id="[&quot;ce3b3215-f0f4-c38a-7d86-30314efb2938_instance-8&quot;]" class="div-block-52">
+          <div data-by="square-footage" data-w-id="c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-8" data-wf-id="[&quot;c2ba15fe-af91-c31b-c9af-11c5e97edc85_instance-8&quot;]" data-has-binding-on-children="true" class="text-block-10">1300</div>
+          <div data-w-id="c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-8" data-wf-id="[&quot;c7bbdfa9-7945-5721-13bf-2b5015d6bf08_instance-8&quot;]">Sq Ft</div>
+        </div><a data-wf-target="[[[&quot;69bd331bc7acd24e43e6a756&quot;,&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5&quot;],[]]]" data-w-id="65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-8" data-wf-id="[&quot;65de73f8-b039-45b8-53c1-c0024d9c37e5_instance-8&quot;]" href="#" class="enquire-now-button w-button">Enquire Now</a>
+      </div>
+    </div>
+    <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae5" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae5&quot;]" class="w-dyn-hide w-dyn-empty">
+      <div data-w-id="d69ec164-9eb6-61aa-4977-5c57c72f8ae6" data-wf-id="[&quot;d69ec164-9eb6-61aa-4977-5c57c72f8ae6&quot;]">No items found.</div>
+    </div>
+  </div>
+  <section data-w-id="6865412a-5d8f-8a63-6531-91ef4c22b70c" data-wf-id="[&quot;6865412a-5d8f-8a63-6531-91ef4c22b70c&quot;]">
+    <div data-w-id="75c0ad73-fa64-79eb-fac1-dbe77c19de81" data-wf-id="[&quot;75c0ad73-fa64-79eb-fac1-dbe77c19de81&quot;]" class="w-layout-blockcontainer w-container">
+      <div data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d2" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d2&quot;]" class="w-form">
+        <form method="get" name="email-form" data-name="Email Form" data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d3" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d3&quot;]" id="email-form" data-wf-page-id="69bd331bc7acd24e43e6a756" data-wf-element-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d3" aria-label="Email Form"><label for="name" data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d4" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d4&quot;]">Name</label><input class="w-input" maxlength="256" name="name" data-name="Name" placeholder="" data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d6" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d6&quot;]" type="text" id="name"><label for="email" data-w-id="63c03e63-6f1f-2e22-cb3e-6385f0707460" data-wf-id="[&quot;63c03e63-6f1f-2e22-cb3e-6385f0707460&quot;]">Email Address</label><input class="w-input" maxlength="256" name="email" data-name="Email" placeholder="" data-w-id="acd1816d-99fc-99c7-911a-c9a048b70331" data-wf-id="[&quot;acd1816d-99fc-99c7-911a-c9a048b70331&quot;]" type="email" id="email" required=""><label for="booking-space" data-w-id="457efe48-0678-0a65-589e-bde6e75dba49" data-wf-id="[&quot;457efe48-0678-0a65-589e-bde6e75dba49&quot;]">Space</label><input class="w-input" maxlength="256" name="email" data-name="Email" placeholder="" data-w-id="e327dcea-2e82-106b-fea3-029f1a79fb1a" data-wf-id="[&quot;e327dcea-2e82-106b-fea3-029f1a79fb1a&quot;]" type="text" id="booking-space"><label for="email" data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d7" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d7&quot;]">Dates</label><input class="w-input" maxlength="256" name="email" data-name="Email" placeholder="" data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d9" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d9&quot;]" type="text" id="booking-dates"><label for="booking-message" data-w-id="e2f1df37-efc3-6bbb-b31b-5fb37ec62557" data-wf-id="[&quot;e2f1df37-efc3-6bbb-b31b-5fb37ec62557&quot;]">Message</label><textarea class="w-input" maxlength="5000" name="field" data-name="Field" placeholder="Message" data-w-id="90b87e02-6409-cb3c-5fca-0448ca92c871" data-wf-id="[&quot;90b87e02-6409-cb3c-5fca-0448ca92c871&quot;]" id="booking-message"></textarea><input type="submit" data-wait="Please wait..." data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1da" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1da&quot;]" class="w-button" value="Submit"></form>
+        <div data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1db" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1db&quot;]" class="w-form-done" tabindex="-1" role="region" aria-label="Email Form success">
+          <div data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1dc" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1dc&quot;]">Thank you! Your submission has been
+            received!</div>
+        </div>
+        <div data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1de" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1de&quot;]" class="w-form-fail" tabindex="-1" role="region" aria-label="Email Form failure">
+          <div data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1df" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1df&quot;]">Oops! Something went wrong while submitting
+            the form.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="form-modal" data-w-id="6865412a-5d8f-8a63-6531-91ef4c22b70c" data-wf-id="[&quot;6865412a-5d8f-8a63-6531-91ef4c22b70c&quot;]" class="section-20"><a data-w-id="39047df4-0fc2-cf62-e607-dfc7e324f3c8" data-wf-id="[&quot;39047df4-0fc2-cf62-e607-dfc7e324f3c8&quot;]" href="#" class="button w-button">Button Text</a>
+    <div data-w-id="75c0ad73-fa64-79eb-fac1-dbe77c19de81" data-wf-id="[&quot;75c0ad73-fa64-79eb-fac1-dbe77c19de81&quot;]" class="w-layout-blockcontainer w-container">
+      <div data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d2" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d2&quot;]" class="w-form">
+        <form method="get" name="email-form" data-name="Email Form" data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d3" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d3&quot;]" id="email-form" data-wf-page-id="69bd331bc7acd24e43e6a756" data-wf-element-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d3" aria-label="Email Form"><label for="name" data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d4" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d4&quot;]">Name</label><input class="w-input" maxlength="256" name="name" data-name="Name" placeholder="" data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d6" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d6&quot;]" type="text" id="name"><label for="email" data-w-id="63c03e63-6f1f-2e22-cb3e-6385f0707460" data-wf-id="[&quot;63c03e63-6f1f-2e22-cb3e-6385f0707460&quot;]">Email Address</label><input class="w-input" maxlength="256" name="email" data-name="Email" placeholder="" data-w-id="acd1816d-99fc-99c7-911a-c9a048b70331" data-wf-id="[&quot;acd1816d-99fc-99c7-911a-c9a048b70331&quot;]" type="email" id="email" required=""><label for="booking-space" data-w-id="457efe48-0678-0a65-589e-bde6e75dba49" data-wf-id="[&quot;457efe48-0678-0a65-589e-bde6e75dba49&quot;]">Space</label><input class="w-input" maxlength="256" name="email" data-name="Email" placeholder="" data-w-id="e327dcea-2e82-106b-fea3-029f1a79fb1a" data-wf-id="[&quot;e327dcea-2e82-106b-fea3-029f1a79fb1a&quot;]" type="text" id="booking-space"><label for="email" data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d7" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d7&quot;]">Dates</label><input class="w-input" maxlength="256" name="email" data-name="Email" placeholder="" data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1d9" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1d9&quot;]" type="text" id="booking-dates"><label for="booking-message" data-w-id="e2f1df37-efc3-6bbb-b31b-5fb37ec62557" data-wf-id="[&quot;e2f1df37-efc3-6bbb-b31b-5fb37ec62557&quot;]">Message</label><textarea class="w-input" maxlength="5000" name="field" data-name="Field" placeholder="Message" data-w-id="90b87e02-6409-cb3c-5fca-0448ca92c871" data-wf-id="[&quot;90b87e02-6409-cb3c-5fca-0448ca92c871&quot;]" id="booking-message"></textarea><input type="submit" data-wait="Please wait..." data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1da" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1da&quot;]" class="w-button" value="Submit"></form>
+        <div data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1db" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1db&quot;]" class="w-form-done" tabindex="-1" role="region" aria-label="Email Form success">
+          <div data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1dc" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1dc&quot;]">Thank you! Your submission has been
+            received!</div>
+        </div>
+        <div data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1de" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1de&quot;]" class="w-form-fail" tabindex="-1" role="region" aria-label="Email Form failure">
+          <div data-w-id="7c9129f4-4e4a-db2c-76e2-e73987f9c1df" data-wf-id="[&quot;7c9129f4-4e4a-db2c-76e2-e73987f9c1df&quot;]">Oops! Something went wrong while submitting
+            the form.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+<script src="main.js" defer=""></script></body></html>
