@@ -1117,15 +1117,21 @@ class Ctx {
 
           if (elapsed > 400 || dist > 15) return;
 
-          // Hit-test: find which unit path is at the tap point
-          const elements = document.elementsFromPoint(info.x, info.y);
-          for (const el of elements) {
-            if (el instanceof SVGPathElement) {
-              const unit = this.units.units.find(u => u.path === el);
-              if (unit) {
-                unit.handleTap(ct.clientX, ct.clientY);
-                break;
-              }
+          // SVG-native hit testing: elementsFromPoint() fails on mobile Safari
+          // when SVG content is inside svg-pan-zoom's transformed <g> viewport.
+          // Instead, use each path's getScreenCTM() to convert screen coords
+          // into the path's local coordinate space, then isPointInFill().
+          const svgEl = this.svgContainer;
+          for (const unit of this.units.units) {
+            const pathScreenCTM = unit.path.getScreenCTM();
+            if (!pathScreenCTM) continue;
+            const testPoint = svgEl.createSVGPoint();
+            testPoint.x = info.x;
+            testPoint.y = info.y;
+            const localPoint = testPoint.matrixTransform(pathScreenCTM.inverse());
+            if (unit.path.isPointInFill(localPoint)) {
+              unit.handleTap(info.x, info.y);
+              return;
             }
           }
         }, { passive: true });

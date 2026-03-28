@@ -6498,14 +6498,17 @@
             const info = tapInfo;
             tapInfo = null;
             if (elapsed > 400 || dist > 15) return;
-            const elements = document.elementsFromPoint(info.x, info.y);
-            for (const el of elements) {
-              if (el instanceof SVGPathElement) {
-                const unit = this.units.units.find((u) => u.path === el);
-                if (unit) {
-                  unit.handleTap(ct.clientX, ct.clientY);
-                  break;
-                }
+            const svgEl = this.svgContainer;
+            for (const unit of this.units.units) {
+              const pathScreenCTM = unit.path.getScreenCTM();
+              if (!pathScreenCTM) continue;
+              const testPoint = svgEl.createSVGPoint();
+              testPoint.x = info.x;
+              testPoint.y = info.y;
+              const localPoint = testPoint.matrixTransform(pathScreenCTM.inverse());
+              if (unit.path.isPointInFill(localPoint)) {
+                unit.handleTap(info.x, info.y);
+                return;
               }
             }
           }, { passive: true });
