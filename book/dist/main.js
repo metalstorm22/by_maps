@@ -5760,8 +5760,10 @@
       __publicField(this, "hint");
       __publicField(this, "hintTimeout", null);
       __publicField(this, "lastWheelEventTime", 0);
-      __publicField(this, "touchStart", null);
-      __publicField(this, "isTouchDevice", false);
+      __publicField(this, "singleFingerStart", null);
+      // Two-finger gesture state
+      __publicField(this, "lastTouchCenter", null);
+      __publicField(this, "lastTouchDist", null);
       __publicField(this, "handleWheel", (event) => {
         if (!event.metaKey && !event.ctrlKey) {
           this.showHint(`Hold ${this.getModifierLabel()} while scrolling to zoom the map`);
@@ -5791,35 +5793,65 @@
       __publicField(this, "handleTouchStart", (event) => {
         if (event.touches.length === 1) {
           const touch = event.touches[0];
-          this.touchStart = {
-            x: touch.clientX,
-            y: touch.clientY
-          };
+          this.singleFingerStart = { x: touch.clientX, y: touch.clientY };
+          this.lastTouchCenter = null;
+          this.lastTouchDist = null;
           return;
         }
-        if (this.isTouchDevice && event.touches.length >= 2) {
-          this.spz.enablePan();
+        if (event.touches.length >= 2) {
+          event.preventDefault();
+          this.singleFingerStart = null;
+          this.lastTouchCenter = this.touchCenter(event.touches[0], event.touches[1]);
+          this.lastTouchDist = this.touchDist(event.touches[0], event.touches[1]);
         }
-        this.touchStart = null;
       });
       __publicField(this, "handleTouchMove", (event) => {
-        if (event.touches.length !== 1 || this.touchStart === null) {
+        if (event.touches.length === 1 && this.singleFingerStart !== null) {
+          const touch = event.touches[0];
+          const dist = Math.hypot(
+            touch.clientX - this.singleFingerStart.x,
+            touch.clientY - this.singleFingerStart.y
+          );
+          if (dist > 12) {
+            this.showHint("Use two fingers to move the map");
+            this.singleFingerStart = null;
+          }
           return;
         }
-        const touch = event.touches[0];
-        const dx = touch.clientX - this.touchStart.x;
-        const dy = touch.clientY - this.touchStart.y;
-        const distance = Math.hypot(dx, dy);
-        if (distance < 12) {
-          return;
+        if (event.touches.length >= 2) {
+          event.preventDefault();
+          const center = this.touchCenter(event.touches[0], event.touches[1]);
+          const dist = this.touchDist(event.touches[0], event.touches[1]);
+          if (this.lastTouchCenter !== null) {
+            const dx = center.x - this.lastTouchCenter.x;
+            const dy = center.y - this.lastTouchCenter.y;
+            const current = this.spz.getPan();
+            this.spz.pan({ x: current.x + dx, y: current.y + dy });
+          }
+          if (this.lastTouchDist !== null && this.lastTouchDist > 0) {
+            const scale = dist / this.lastTouchDist;
+            if (Math.abs(scale - 1) > 0.01) {
+              const inverseScreenCTM = this.svg.getScreenCTM()?.inverse();
+              if (inverseScreenCTM) {
+                const point = this.svg.createSVGPoint();
+                point.x = center.x;
+                point.y = center.y;
+                const relativePoint = point.matrixTransform(inverseScreenCTM);
+                this.spz.zoomAtPointBy(scale, relativePoint);
+              }
+            }
+          }
+          this.lastTouchCenter = center;
+          this.lastTouchDist = dist;
         }
-        this.showHint("Use two fingers to move the map");
-        this.touchStart = null;
       });
       __publicField(this, "handleTouchEnd", (event) => {
-        this.touchStart = null;
-        if (this.isTouchDevice && event.touches.length === 0) {
-          this.spz.disablePan();
+        if (event.touches.length < 2) {
+          this.lastTouchCenter = null;
+          this.lastTouchDist = null;
+        }
+        if (event.touches.length === 0) {
+          this.singleFingerStart = null;
         }
       });
       const element = document.querySelector("#svg-section");
@@ -5836,14 +5868,16 @@
       this.hint = hint;
       this.hint.textContent = "";
       this.element.addEventListener("wheel", this.handleWheel, { passive: false });
-      this.element.addEventListener("touchstart", this.handleTouchStart, { passive: true });
-      this.element.addEventListener("touchmove", this.handleTouchMove, { passive: true });
+      this.element.addEventListener("touchstart", this.handleTouchStart, { passive: false });
+      this.element.addEventListener("touchmove", this.handleTouchMove, { passive: false });
       this.element.addEventListener("touchend", this.handleTouchEnd, { passive: true });
       this.element.addEventListener("touchcancel", this.handleTouchEnd, { passive: true });
-      if ("ontouchstart" in window) {
-        this.isTouchDevice = true;
-        this.spz.disablePan();
-      }
+    }
+    touchCenter(t1, t2) {
+      return { x: (t1.clientX + t2.clientX) / 2, y: (t1.clientY + t2.clientY) / 2 };
+    }
+    touchDist(t1, t2) {
+      return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
     }
     getModifierLabel() {
       return /Mac|iPhone|iPad|iPod/.test(navigator.platform) ? "\u2318" : "Ctrl";
@@ -6593,13 +6627,23 @@
       throw new Error("Not SVG");
     }
     let ctx = null;
+    const isTouchDevice = "ontouchstart" in window;
     const spz = (0, import_svg_pan_zoom.default)(svg, {
       zoomEnabled: true,
       controlIconsEnabled: false,
       fit: true,
       center: true,
       mouseWheelZoomEnabled: false,
-      dblClickZoomEnabled: true,
+      dblClickZoomEnabled: !isTouchDevice,
+      // On touch devices, remove svg-pan-zoom's touch handlers entirely
+      // so we can handle two-finger pan/zoom ourselves.
+      customEventsHandler: isTouchDevice ? {
+        haltEventListeners: ["touchstart", "touchend", "touchmove", "touchleave", "touchcancel"],
+        init: () => {
+        },
+        destroy: () => {
+        }
+      } : void 0,
       onPan: () => {
         ctx?.scheduleLabelUpdate();
       },

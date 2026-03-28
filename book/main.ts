@@ -208,8 +208,11 @@ class EmbeddedMapGestures {
   private readonly hint: HTMLElement;
   private hintTimeout: number | null = null;
   private lastWheelEventTime = 0;
-  private touchStart: { x: number; y: number } | null = null;
-  private isTouchDevice = false;
+  private singleFingerStart: { x: number; y: number } | null = null;
+
+  // Two-finger gesture state
+  private lastTouchCenter: { x: number; y: number } | null = null;
+  private lastTouchDist: number | null = null;
 
   constructor(
     private readonly spz: ReturnType<typeof svgPanZoom>,
@@ -231,16 +234,10 @@ class EmbeddedMapGestures {
     this.hint.textContent = '';
 
     this.element.addEventListener('wheel', this.handleWheel, { passive: false });
-    this.element.addEventListener('touchstart', this.handleTouchStart, { passive: true });
-    this.element.addEventListener('touchmove', this.handleTouchMove, { passive: true });
+    this.element.addEventListener('touchstart', this.handleTouchStart, { passive: false });
+    this.element.addEventListener('touchmove', this.handleTouchMove, { passive: false });
     this.element.addEventListener('touchend', this.handleTouchEnd, { passive: true });
     this.element.addEventListener('touchcancel', this.handleTouchEnd, { passive: true });
-
-    // Disable pan on touch devices — re-enabled only during two-finger gestures
-    if ('ontouchstart' in window) {
-      this.isTouchDevice = true;
-      this.spz.disablePan();
-    }
   }
 
   private readonly handleWheel = (event: WheelEvent) => {
@@ -279,46 +276,88 @@ class EmbeddedMapGestures {
     this.spz.zoomAtPointBy(zoom, relativePoint);
   };
 
+  private touchCenter(t1: Touch, t2: Touch): { x: number; y: number } {
+    return { x: (t1.clientX + t2.clientX) / 2, y: (t1.clientY + t2.clientY) / 2 };
+  }
+
+  private touchDist(t1: Touch, t2: Touch): number {
+    return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+  }
+
   private readonly handleTouchStart = (event: TouchEvent) => {
     if (event.touches.length === 1) {
       const touch = event.touches[0];
-      this.touchStart = {
-        x: touch.clientX,
-        y: touch.clientY,
-      };
+      this.singleFingerStart = { x: touch.clientX, y: touch.clientY };
+      this.lastTouchCenter = null;
+      this.lastTouchDist = null;
       return;
     }
 
-    // Two or more fingers — enable panning
-    if (this.isTouchDevice && event.touches.length >= 2) {
-      this.spz.enablePan();
+    // Two fingers — start tracking for pan/zoom
+    if (event.touches.length >= 2) {
+      event.preventDefault();
+      this.singleFingerStart = null;
+      this.lastTouchCenter = this.touchCenter(event.touches[0], event.touches[1]);
+      this.lastTouchDist = this.touchDist(event.touches[0], event.touches[1]);
     }
-    this.touchStart = null;
   };
 
   private readonly handleTouchMove = (event: TouchEvent) => {
-    if (event.touches.length !== 1 || this.touchStart === null) {
+    // Single finger drag — show hint, don't pan
+    if (event.touches.length === 1 && this.singleFingerStart !== null) {
+      const touch = event.touches[0];
+      const dist = Math.hypot(
+        touch.clientX - this.singleFingerStart.x,
+        touch.clientY - this.singleFingerStart.y,
+      );
+      if (dist > 12) {
+        this.showHint('Use two fingers to move the map');
+        this.singleFingerStart = null;
+      }
       return;
     }
 
-    const touch = event.touches[0];
-    const dx = touch.clientX - this.touchStart.x;
-    const dy = touch.clientY - this.touchStart.y;
-    const distance = Math.hypot(dx, dy);
+    // Two-finger pan + pinch zoom
+    if (event.touches.length >= 2) {
+      event.preventDefault();
+      const center = this.touchCenter(event.touches[0], event.touches[1]);
+      const dist = this.touchDist(event.touches[0], event.touches[1]);
 
-    if (distance < 12) {
-      return;
+      if (this.lastTouchCenter !== null) {
+        // Pan
+        const dx = center.x - this.lastTouchCenter.x;
+        const dy = center.y - this.lastTouchCenter.y;
+        const current = this.spz.getPan();
+        this.spz.pan({ x: current.x + dx, y: current.y + dy });
+      }
+
+      if (this.lastTouchDist !== null && this.lastTouchDist > 0) {
+        // Pinch zoom
+        const scale = dist / this.lastTouchDist;
+        if (Math.abs(scale - 1) > 0.01) {
+          const inverseScreenCTM = this.svg.getScreenCTM()?.inverse();
+          if (inverseScreenCTM) {
+            const point = this.svg.createSVGPoint();
+            point.x = center.x;
+            point.y = center.y;
+            const relativePoint = point.matrixTransform(inverseScreenCTM);
+            this.spz.zoomAtPointBy(scale, relativePoint);
+          }
+        }
+      }
+
+      this.lastTouchCenter = center;
+      this.lastTouchDist = dist;
     }
-
-    this.showHint('Use two fingers to move the map');
-    this.touchStart = null;
   };
 
   private readonly handleTouchEnd = (event: TouchEvent) => {
-    this.touchStart = null;
-    // When all fingers lift, disable pan again
-    if (this.isTouchDevice && event.touches.length === 0) {
-      this.spz.disablePan();
+    if (event.touches.length < 2) {
+      this.lastTouchCenter = null;
+      this.lastTouchDist = null;
+    }
+    if (event.touches.length === 0) {
+      this.singleFingerStart = null;
     }
   };
 
@@ -1235,13 +1274,21 @@ const main = async () => {
   }
 
   let ctx: Ctx | null = null;
+  const isTouchDevice = 'ontouchstart' in window;
   const spz = svgPanZoom(svg, {
     zoomEnabled: true,
     controlIconsEnabled: false,
     fit: true,
     center: true,
     mouseWheelZoomEnabled: false,
-    dblClickZoomEnabled: true,
+    dblClickZoomEnabled: !isTouchDevice,
+    // On touch devices, remove svg-pan-zoom's touch handlers entirely
+    // so we can handle two-finger pan/zoom ourselves.
+    customEventsHandler: isTouchDevice ? {
+      haltEventListeners: ['touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel'],
+      init: () => {},
+      destroy: () => {},
+    } : undefined,
     onPan: () => {
       ctx?.scheduleLabelUpdate();
     },
