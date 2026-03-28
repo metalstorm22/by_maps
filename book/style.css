@@ -278,13 +278,57 @@ path:has(> title) {
   outline-offset: 2px;
 }
 
+/* Tablet */
+@media (max-width: 991px) {
+  #svg-section {
+    min-height: 60vh;
+  }
+
+  .svg-container {
+    min-height: 60vh;
+  }
+
+  #unit-place-holder {
+    position: fixed;
+    width: 100%;
+    height: 55vh;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    margin-right: 0;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0px -4px 30px rgba(0, 0, 0, 0.2);
+    z-index: 50;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Mobile */
 @media (max-width: 767px) {
+  #svg-section {
+    min-height: 50vh;
+  }
+
+  .svg-container {
+    min-height: 50vh;
+  }
+
   #booking-controls {
     grid-template-columns: 1fr auto;
+    padding: 12px;
+    gap: 12px;
   }
 
   .booking-control-field:first-child {
     grid-column: 1 / -1;
+  }
+
+  #booking-controls input,
+  #booking-controls select {
+    height: 44px;
+    font-size: 16px;
   }
 
   #map-zoom-controls {
@@ -305,5 +349,14 @@ path:has(> title) {
     max-width: calc(100vw - 120px);
     font-size: 12px;
     text-align: center;
+  }
+
+  .unit-label-pill {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  #unit-place-holder {
+    height: 50vh;
   }
 }
