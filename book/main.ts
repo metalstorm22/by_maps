@@ -1117,21 +1117,50 @@ class Ctx {
 
           if (elapsed > 400 || dist > 15) return;
 
-          // SVG-native hit testing: elementsFromPoint() fails on mobile Safari
-          // when SVG content is inside svg-pan-zoom's transformed <g> viewport.
-          // Instead, use each path's getScreenCTM() to convert screen coords
-          // into the path's local coordinate space, then isPointInFill().
+          // Hit testing on mobile Safari:
+          // 1. elementsFromPoint() fails inside svg-pan-zoom's transformed <g>
+          // 2. getScreenCTM() ignores CSS transforms on ancestors in WebKit
+          // So we use getBoundingClientRect() (always correct) to compute
+          // the offset, then the viewport CTM for SVG-local coords.
           const svgEl = this.svgContainer;
-          for (const unit of this.units.units) {
-            const pathScreenCTM = unit.path.getScreenCTM();
-            if (!pathScreenCTM) continue;
-            const testPoint = svgEl.createSVGPoint();
-            testPoint.x = info.x;
-            testPoint.y = info.y;
-            const localPoint = testPoint.matrixTransform(pathScreenCTM.inverse());
-            if (unit.path.isPointInFill(localPoint)) {
-              unit.handleTap(info.x, info.y);
-              return;
+          const svgRect = svgEl.getBoundingClientRect();
+          // Position relative to the SVG element's rendered box
+          const relX = info.x - svgRect.left;
+          const relY = info.y - svgRect.top;
+          // Scale from CSS pixels to SVG viewBox units
+          // svg-pan-zoom removes viewBox — the SVG's width/height attrs define the coord space
+          const scaleX = (svgEl.viewBox.baseVal.width || svgEl.width.baseVal.value) / svgRect.width;
+          const scaleY = (svgEl.viewBox.baseVal.height || svgEl.height.baseVal.value) / svgRect.height;
+          const svgX = relX * scaleX;
+          const svgY = relY * scaleY;
+
+          // Transform from SVG root coords into the viewport <g> local coords
+          const viewport = svgEl.querySelector('.svg-pan-zoom_viewport');
+          if (viewport instanceof SVGGraphicsElement) {
+            const vpCTM = viewport.getCTM();
+            if (vpCTM) {
+              const inv = vpCTM.inverse();
+              const localX = inv.a * svgX + inv.c * svgY + inv.e;
+              const localY = inv.b * svgX + inv.d * svgY + inv.f;
+
+              const testPoint = svgEl.createSVGPoint();
+              testPoint.x = localX;
+              testPoint.y = localY;
+
+              // Quick bbox pre-filter then geometric hit test
+              for (const unit of this.units.units) {
+                const bbox = unit.path.getBBox();
+                if (localX < bbox.x || localX > bbox.x + bbox.width ||
+                    localY < bbox.y || localY > bbox.y + bbox.height) {
+                  continue;
+                }
+                testPoint.x = localX;
+                testPoint.y = localY;
+                if (unit.path.isPointInFill(testPoint)) {
+                  unit.handleTap(info.x, info.y);
+                  return;
+                }
+              }
             }
           }
         }, { passive: true });

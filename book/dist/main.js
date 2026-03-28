@@ -6499,16 +6499,35 @@
             tapInfo = null;
             if (elapsed > 400 || dist > 15) return;
             const svgEl = this.svgContainer;
-            for (const unit of this.units.units) {
-              const pathScreenCTM = unit.path.getScreenCTM();
-              if (!pathScreenCTM) continue;
-              const testPoint = svgEl.createSVGPoint();
-              testPoint.x = info.x;
-              testPoint.y = info.y;
-              const localPoint = testPoint.matrixTransform(pathScreenCTM.inverse());
-              if (unit.path.isPointInFill(localPoint)) {
-                unit.handleTap(info.x, info.y);
-                return;
+            const svgRect = svgEl.getBoundingClientRect();
+            const relX = info.x - svgRect.left;
+            const relY = info.y - svgRect.top;
+            const scaleX = (svgEl.viewBox.baseVal.width || svgEl.width.baseVal.value) / svgRect.width;
+            const scaleY = (svgEl.viewBox.baseVal.height || svgEl.height.baseVal.value) / svgRect.height;
+            const svgX = relX * scaleX;
+            const svgY = relY * scaleY;
+            const viewport = svgEl.querySelector(".svg-pan-zoom_viewport");
+            if (viewport instanceof SVGGraphicsElement) {
+              const vpCTM = viewport.getCTM();
+              if (vpCTM) {
+                const inv = vpCTM.inverse();
+                const localX = inv.a * svgX + inv.c * svgY + inv.e;
+                const localY = inv.b * svgX + inv.d * svgY + inv.f;
+                const testPoint = svgEl.createSVGPoint();
+                testPoint.x = localX;
+                testPoint.y = localY;
+                for (const unit of this.units.units) {
+                  const bbox = unit.path.getBBox();
+                  if (localX < bbox.x || localX > bbox.x + bbox.width || localY < bbox.y || localY > bbox.y + bbox.height) {
+                    continue;
+                  }
+                  testPoint.x = localX;
+                  testPoint.y = localY;
+                  if (unit.path.isPointInFill(testPoint)) {
+                    unit.handleTap(info.x, info.y);
+                    return;
+                  }
+                }
               }
             }
           }, { passive: true });
