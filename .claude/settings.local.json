@@ -19,7 +19,14 @@
       "Bash(curl -sI \"https://cdn.jsdelivr.net/gh/metalstorm22/by_maps@main/book/dist/main.css\")",
       "Bash(curl -s \"https://purge.jsdelivr.net/gh/metalstorm22/by_maps@main/book/dist/main.css\")",
       "WebFetch(domain:borough-yards-b9461d4fc408af0fbc8c77799.webflow.io)",
-      "Bash(curl -s \"https://cdn.jsdelivr.net/gh/metalstorm22/by_maps@main/book/dist/main.js\")"
+      "Bash(curl -s \"https://cdn.jsdelivr.net/gh/metalstorm22/by_maps@main/book/dist/main.js\")",
+      "Bash(npx tsx:*)",
+      "Bash(curl -s \"https://purge.jsdelivr.net/gh/metalstorm22/by_maps@main/book/dist/main.js\")",
+      "Bash(find '/Users/parthgupta/Desktop/Projects/Code Adv/by_maps/book/node_modules' -path */svg-pan-zoom* -maxdepth 4)",
+      "WebSearch",
+      "WebFetch(domain:caniuse.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:bugs.webkit.org)"
     ]
   }
 }

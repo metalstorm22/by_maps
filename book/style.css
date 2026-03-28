@@ -49,7 +49,7 @@ path:has(> title) {
 .svg-container {
   position: relative;
   min-height: 100vh;
-  touch-action: pan-y pinch-zoom;
+  touch-action: pan-y;
 }
 
 #booking-toast {

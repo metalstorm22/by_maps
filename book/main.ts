@@ -1120,17 +1120,23 @@ class Ctx {
           // Hit testing on mobile Safari:
           // 1. elementsFromPoint() fails inside svg-pan-zoom's transformed <g>
           // 2. getScreenCTM() ignores CSS transforms on ancestors in WebKit
+          // 3. width.baseVal.value can return CSS-computed size in Safari
           // So we use getBoundingClientRect() (always correct) to compute
-          // the offset, then the viewport CTM for SVG-local coords.
+          // the offset, and read width/height attributes directly as strings.
           const svgEl = this.svgContainer;
           const svgRect = svgEl.getBoundingClientRect();
           // Position relative to the SVG element's rendered box
           const relX = info.x - svgRect.left;
           const relY = info.y - svgRect.top;
-          // Scale from CSS pixels to SVG viewBox units
-          // svg-pan-zoom removes viewBox — the SVG's width/height attrs define the coord space
-          const scaleX = (svgEl.viewBox.baseVal.width || svgEl.width.baseVal.value) / svgRect.width;
-          const scaleY = (svgEl.viewBox.baseVal.height || svgEl.height.baseVal.value) / svgRect.height;
+          // Scale from CSS pixels to SVG coordinate units
+          // svg-pan-zoom removes viewBox and sets width/height attrs to the original viewBox size.
+          // Read the attribute string directly — Safari's baseVal.value can return CSS-computed px.
+          const attrW = parseFloat(svgEl.getAttribute('width') || '0');
+          const attrH = parseFloat(svgEl.getAttribute('height') || '0');
+          const svgW = attrW || svgEl.viewBox.baseVal.width || svgEl.width.baseVal.value;
+          const svgH = attrH || svgEl.viewBox.baseVal.height || svgEl.height.baseVal.value;
+          const scaleX = svgW / svgRect.width;
+          const scaleY = svgH / svgRect.height;
           const svgX = relX * scaleX;
           const svgY = relY * scaleY;
 
@@ -1317,10 +1323,16 @@ const main = async () => {
     center: true,
     mouseWheelZoomEnabled: false,
     dblClickZoomEnabled: !isTouchDevice,
-    // On touch devices, remove svg-pan-zoom's touch handlers entirely
+    // On touch devices, disable built-in panning so single-finger
+    // synthetic mouse events don't pan the map (allows page scroll).
+    panEnabled: !isTouchDevice,
+    // Remove svg-pan-zoom's touch AND mouse handlers on touch devices
     // so we can handle two-finger pan/zoom ourselves.
     customEventsHandler: isTouchDevice ? {
-      haltEventListeners: ['touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel'],
+      haltEventListeners: [
+        'touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel',
+        'mousedown', 'mouseup', 'mousemove', 'mouseleave',
+      ],
       init: () => {},
       destroy: () => {},
     } : undefined,
