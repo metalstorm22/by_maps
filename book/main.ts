@@ -1080,7 +1080,7 @@ class Ctx {
 
     // Mobile tap detection — svg-pan-zoom swallows touch/click on mobile,
     // so we detect taps globally on the SVG section and hit-test against unit paths.
-    if ('ontouchstart' in window && navigator.maxTouchPoints > 0 && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    if (navigator.maxTouchPoints > 1) {
       const section = document.querySelector('#svg-section');
       if (section) {
         let tapInfo: { x: number; y: number; time: number; fingers: number } | null = null;
@@ -1309,7 +1309,7 @@ const main = async () => {
   }
 
   let ctx: Ctx | null = null;
-  const isTouchDevice = 'ontouchstart' in window && navigator.maxTouchPoints > 0 && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const isTouchDevice = navigator.maxTouchPoints > 1;
   const spz = svgPanZoom(svg, {
     zoomEnabled: true,
     controlIconsEnabled: false,
