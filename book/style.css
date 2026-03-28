@@ -9,6 +9,9 @@
 
 .booking-unit {
   cursor: pointer;
+  touch-action: none;
+  pointer-events: all;
+  -webkit-tap-highlight-color: transparent;
 }
 
 

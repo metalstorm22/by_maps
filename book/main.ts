@@ -820,6 +820,7 @@ const animatePanTo = (
 class Unit {
   public isAvailable = true;
   public isSelected = false;
+  private lastTapTime = 0;
 
   constructor(private ctx: Ctx, public readonly path: SVGPathElement, public readonly title: string) {
     path.classList.add('booking-unit');
@@ -828,6 +829,26 @@ class Unit {
     path.addEventListener('click', (e) => {
       this.handleTap(e.clientX, e.clientY);
     });
+
+    // Direct pointer-event tap detection on each path.
+    // Safari iOS may fire touchcancel (killing the EmbeddedMapGestures tap
+    // detection) when touch-action: pan-y is active on ancestor elements.
+    // Pointer events on the path itself, combined with touch-action: none
+    // on .booking-unit, provide a reliable independent tap path.
+    let ptrDown: { x: number; y: number; time: number } | null = null;
+    path.addEventListener('pointerdown', (e: PointerEvent) => {
+      ptrDown = { x: e.clientX, y: e.clientY, time: Date.now() };
+    }, { passive: true });
+    path.addEventListener('pointerup', (e: PointerEvent) => {
+      if (ptrDown === null) return;
+      const elapsed = Date.now() - ptrDown.time;
+      const dist = Math.hypot(e.clientX - ptrDown.x, e.clientY - ptrDown.y);
+      ptrDown = null;
+      if (elapsed <= 400 && dist <= 12) {
+        this.handleTap(e.clientX, e.clientY);
+      }
+    }, { passive: true });
+    path.addEventListener('pointercancel', () => { ptrDown = null; }, { passive: true });
 
     path.addEventListener('pointerover', () => {
       ctx.handleUnitPointerOver(this);
@@ -838,6 +859,11 @@ class Unit {
   }
 
   public handleTap(clientX: number, clientY: number) {
+    // Deduplicate taps from multiple event paths (click, pointerup, managed touch)
+    const now = Date.now();
+    if (now - this.lastTapTime < 300) return;
+    this.lastTapTime = now;
+
     const current = this.ctx.spz.getPan();
     const rect = this.ctx.svgContainer.getBoundingClientRect();
     const width  = this.ctx.svgContainer.clientWidth;
