@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"https://developers.webflow.com\")",
+      "Bash(curl -s https://docs.developers.webflow.com/docs/getting-started)",
+      "WebFetch(domain:docs.developers.webflow.com)",
+      "WebFetch(domain:developers.webflow.com)",
+      "WebFetch(domain:university.webflow.com)",
+      "WebFetch(domain:webflow.com)",
+      "WebFetch(domain:www.google.com)",
+      "WebFetch(domain:community.webflow.com)",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(npm view:*)",
+      "Bash(npm search:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(npx @webflow/webflow-cli --help)",
+      "Bash(npx -y @webflow/webflow-cli --help)",
+      "Bash(curl -sI \"https://cdn.jsdelivr.net/gh/metalstorm22/by_maps@main/book/dist/main.js\")",
+      "Bash(curl -sI \"https://cdn.jsdelivr.net/gh/metalstorm22/by_maps@main/book/dist/main.css\")",
+      "Bash(curl -s \"https://purge.jsdelivr.net/gh/metalstorm22/by_maps@main/book/dist/main.css\")",
+      "WebFetch(domain:borough-yards-b9461d4fc408af0fbc8c77799.webflow.io)",
+      "Bash(curl -s \"https://cdn.jsdelivr.net/gh/metalstorm22/by_maps@main/book/dist/main.js\")"
+    ]
+  }
+}
