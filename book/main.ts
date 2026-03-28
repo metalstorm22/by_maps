@@ -323,6 +323,14 @@ class EmbeddedMapGestures {
 
   private readonly handleTouchStart = (event: TouchEvent) => {
     if (event.touches.length === 1) {
+      // Ignore touches that originate outside the SVG (e.g. on the card overlay,
+      // zoom controls, or booking controls). Without this, tapping the card's
+      // close button hides the card but the touch also triggers a unit selection
+      // on the map behind it, immediately re-showing the card.
+      if (event.target instanceof Node && !this.svg.contains(event.target)) {
+        return;
+      }
+
       const touch = event.touches[0];
       this.tapCandidate = {
         startX: touch.clientX,
