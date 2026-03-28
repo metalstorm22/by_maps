@@ -228,6 +228,7 @@ class EmbeddedMapGestures {
     startX: number;
     startY: number;
     startedAt: number;
+    target: EventTarget | null;
   } | null = null;
 
   // Two-finger gesture state
@@ -237,7 +238,7 @@ class EmbeddedMapGestures {
   constructor(
     private readonly spz: ReturnType<typeof svgPanZoom>,
     private readonly svg: SVGSVGElement,
-    private readonly onScreenTap: (clientX: number, clientY: number) => void,
+    private readonly onScreenTap: (target: EventTarget | null, clientX: number, clientY: number) => void,
   ) {
     const element = document.querySelector('#svg-section');
     if (!(element instanceof HTMLElement)) {
@@ -317,7 +318,7 @@ class EmbeddedMapGestures {
   }
 
   private triggerManagedTap(clientX: number, clientY: number): void {
-    this.onScreenTap(clientX, clientY);
+    this.onScreenTap(this.tapCandidate?.target ?? null, clientX, clientY);
   }
 
   private readonly handleTouchStart = (event: TouchEvent) => {
@@ -327,6 +328,7 @@ class EmbeddedMapGestures {
         startX: touch.clientX,
         startY: touch.clientY,
         startedAt: Date.now(),
+        target: event.target,
       };
       this.lastTouchCenter = null;
       this.lastTouchDist = null;
@@ -1112,8 +1114,8 @@ class Ctx {
     this.syncFilterControls();
   }
 
-  public handleScreenTap(clientX: number, clientY: number): void {
-    const tappedUnit = this.getUnitFromScreenPoint(clientX, clientY);
+  public handleScreenTap(target: EventTarget | null, clientX: number, clientY: number): void {
+    const tappedUnit = this.getUnitFromEventTarget(target) ?? this.getUnitFromScreenPoint(clientX, clientY);
     if (tappedUnit !== null) {
       tappedUnit.handleTap(clientX, clientY);
     }
@@ -1283,6 +1285,22 @@ class Ctx {
     return null;
   }
 
+  private getUnitFromEventTarget(target: EventTarget | null): Unit | null {
+    if (!(target instanceof Node)) {
+      return null;
+    }
+
+    let current: Node | null = target;
+    while (current !== null) {
+      if (current instanceof SVGPathElement && current.dataset.bookingUnit === 'true') {
+        return this.units.units.find((unit) => unit.path === current) ?? null;
+      }
+      current = current.parentNode;
+    }
+
+    return null;
+  }
+
 }
 
 const main = async () => {
@@ -1331,8 +1349,8 @@ const main = async () => {
 
   new ZoomControls(spz);
   ctx = new Ctx(spz, svg, json);
-  new EmbeddedMapGestures(spz, svg, (clientX, clientY) => {
-    ctx?.handleScreenTap(clientX, clientY);
+  new EmbeddedMapGestures(spz, svg, (target, clientX, clientY) => {
+    ctx?.handleScreenTap(target, clientX, clientY);
   });
 
 };
