@@ -736,19 +736,44 @@ class Unit {
   public isSelected = false;
 
   constructor(private ctx: Ctx, public readonly path: SVGPathElement, public readonly title: string) {
-    path.addEventListener('click', (e) => {
+    const handleSelect = (clientX: number, clientY: number) => {
       const current = this.ctx.spz.getPan();
       const rect = ctx.svgContainer.getBoundingClientRect();
       const width  = ctx.svgContainer.clientWidth;
       const height = ctx.svgContainer.clientHeight;
-      const pointerX = e.clientX - rect.left;
-      const pointerY = e.clientY - rect.top;
+      const pointerX = clientX - rect.left;
+      const pointerY = clientY - rect.top;
       const targetX = current.x + (width / 2) - pointerX;
       const targetY = current.y + (height / 2) - pointerY;
 
       animatePanTo(this.ctx.spz, current.x, current.y, targetX, targetY);
       ctx.handleUnitPointerDown(this);
+    };
+
+    path.addEventListener('click', (e) => {
+      handleSelect(e.clientX, e.clientY);
     });
+
+    // Touch tap detection — svg-pan-zoom swallows clicks on mobile
+    let touchStart: { x: number; y: number; time: number } | null = null;
+    path.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        const t = e.touches[0];
+        touchStart = { x: t.clientX, y: t.clientY, time: Date.now() };
+      }
+    }, { passive: true });
+    path.addEventListener('touchend', (e) => {
+      if (touchStart === null) return;
+      const elapsed = Date.now() - touchStart.time;
+      const ct = e.changedTouches[0];
+      const dist = Math.hypot(ct.clientX - touchStart.x, ct.clientY - touchStart.y);
+      touchStart = null;
+      if (elapsed < 300 && dist < 15) {
+        e.preventDefault();
+        handleSelect(ct.clientX, ct.clientY);
+      }
+    });
+
     path.addEventListener('pointerover', () => {
       ctx.handleUnitPointerOver(this);
     });
