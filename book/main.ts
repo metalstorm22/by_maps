@@ -62,6 +62,18 @@ const UNIT_LABEL_MAX_OFFSET_STEPS = 3;
 const USE_WEIGHTED_UNIT_LABEL_CENTER = true;
 const UNIT_LABEL_CENTER_SAMPLE_STEPS = 12;
 
+const usesManagedTouchGestures = (): boolean => {
+  if (navigator.maxTouchPoints > 0) {
+    return true;
+  }
+
+  if ('ontouchstart' in window) {
+    return true;
+  }
+
+  return window.matchMedia?.('(any-pointer: coarse)').matches ?? false;
+};
+
 type Space = {
   name: string;
   squareFootage: number;
@@ -238,6 +250,9 @@ class EmbeddedMapGestures {
     this.element.addEventListener('touchmove', this.handleTouchMove, { passive: false });
     this.element.addEventListener('touchend', this.handleTouchEnd, { passive: true });
     this.element.addEventListener('touchcancel', this.handleTouchEnd, { passive: true });
+    this.element.addEventListener('gesturestart', this.preventSafariGesture, { passive: false });
+    this.element.addEventListener('gesturechange', this.preventSafariGesture, { passive: false });
+    this.element.addEventListener('gestureend', this.preventSafariGesture, { passive: false });
   }
 
   private readonly handleWheel = (event: WheelEvent) => {
@@ -359,6 +374,10 @@ class EmbeddedMapGestures {
     if (event.touches.length === 0) {
       this.singleFingerStart = null;
     }
+  };
+
+  private readonly preventSafariGesture = (event: Event) => {
+    event.preventDefault();
   };
 
   private getModifierLabel(): string {
@@ -790,6 +809,9 @@ class Unit {
   public isSelected = false;
 
   constructor(private ctx: Ctx, public readonly path: SVGPathElement, public readonly title: string) {
+    path.classList.add('booking-unit');
+    path.dataset.bookingUnit = 'true';
+
     path.addEventListener('click', (e) => {
       this.handleTap(e.clientX, e.clientY);
     });
@@ -1068,7 +1090,7 @@ class Ctx {
 
   constructor(public readonly spz: ReturnType<typeof svgPanZoom>, public readonly svgContainer: SVGSVGElement, sheetData: SheetData) {
     this.parsedSheet = new ParsedSheet(sheetData);
-    const labelledPaths = document.querySelectorAll('path:has(> title)');
+    const labelledPaths = document.querySelectorAll('path');
     this.units = new Units(this, labelledPaths);
     this.unitLabels = new UnitLabels(svgContainer as SVGSVGElement, this.units.units);
     const dateRange = new DateRange(this);
@@ -1080,7 +1102,7 @@ class Ctx {
 
     // Mobile tap detection — svg-pan-zoom swallows touch/click on mobile,
     // so we detect taps globally on the SVG section and hit-test against unit paths.
-    if (navigator.maxTouchPoints > 1) {
+    if (usesManagedTouchGestures()) {
       const section = document.querySelector('#svg-section');
       if (section) {
         let tapInfo: { x: number; y: number; time: number; fingers: number } | null = null;
@@ -1117,33 +1139,9 @@ class Ctx {
 
           if (elapsed > 400 || dist > 15) return;
 
-          // Hit testing on mobile Safari:
-          // getCTM()/getScreenCTM() are unreliable in WebKit with CSS transforms,
-          // so we avoid all matrix math. Instead, use getBoundingClientRect() on
-          // each path (always correct) for a screen-space bbox pre-filter, then
-          // map screen coords to path-local coords via bbox correspondence and
-          // test with isPointInFill().
-          const svgEl = this.svgContainer;
-          const testPoint = svgEl.createSVGPoint();
-
-          for (const unit of this.units.units) {
-            const pathRect = unit.path.getBoundingClientRect();
-            // Screen-space bbox check
-            if (info.x < pathRect.left || info.x > pathRect.right ||
-                info.y < pathRect.top || info.y > pathRect.bottom) {
-              continue;
-            }
-            // Map screen coords to path-local coords using bbox correspondence.
-            // Works because svg-pan-zoom only applies scale+translate (no rotation).
-            const pathBBox = unit.path.getBBox();
-            const localX = pathBBox.x + (info.x - pathRect.left) / pathRect.width * pathBBox.width;
-            const localY = pathBBox.y + (info.y - pathRect.top) / pathRect.height * pathBBox.height;
-            testPoint.x = localX;
-            testPoint.y = localY;
-            if (unit.path.isPointInFill(testPoint)) {
-              unit.handleTap(info.x, info.y);
-              return;
-            }
+          const tappedUnit = this.getUnitFromScreenPoint(info.x, info.y);
+          if (tappedUnit !== null) {
+            tappedUnit.handleTap(info.x, info.y);
           }
         }, { passive: true });
       }
@@ -1270,6 +1268,50 @@ class Ctx {
     return this.hasDateFilter || this.minimumSpace !== 0 || this.maximumSpace !== Infinity;
   }
 
+  private getUnitFromScreenPoint(clientX: number, clientY: number): Unit | null {
+    const directHitCandidates = typeof document.elementsFromPoint === 'function'
+      ? document.elementsFromPoint(clientX, clientY)
+      : [document.elementFromPoint(clientX, clientY)].filter((element): element is Element => element !== null);
+
+    for (const candidate of directHitCandidates) {
+      if (!(candidate instanceof SVGPathElement)) {
+        continue;
+      }
+
+      if (candidate.dataset.bookingUnit !== 'true') {
+        continue;
+      }
+
+      const matchedUnit = this.units.units.find((unit) => unit.path === candidate);
+      if (matchedUnit !== undefined) {
+        return matchedUnit;
+      }
+    }
+
+    const testPoint = this.svgContainer.createSVGPoint();
+
+    for (const unit of this.units.units) {
+      const pathRect = unit.path.getBoundingClientRect();
+      if (clientX < pathRect.left || clientX > pathRect.right ||
+          clientY < pathRect.top || clientY > pathRect.bottom ||
+          pathRect.width === 0 || pathRect.height === 0) {
+        continue;
+      }
+
+      const pathBBox = unit.path.getBBox();
+      const localX = pathBBox.x + (clientX - pathRect.left) / pathRect.width * pathBBox.width;
+      const localY = pathBBox.y + (clientY - pathRect.top) / pathRect.height * pathBBox.height;
+      testPoint.x = localX;
+      testPoint.y = localY;
+
+      if (unit.path.isPointInFill(testPoint)) {
+        return unit;
+      }
+    }
+
+    return null;
+  }
+
 }
 
 const main = async () => {
@@ -1291,7 +1333,7 @@ const main = async () => {
   }
 
   let ctx: Ctx | null = null;
-  const isTouchDevice = navigator.maxTouchPoints > 1;
+  const isTouchDevice = usesManagedTouchGestures();
   const spz = svgPanZoom(svg, {
     zoomEnabled: true,
     controlIconsEnabled: false,

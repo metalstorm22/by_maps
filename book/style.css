@@ -7,7 +7,7 @@
   fill: #9b9b9b;
 }
 
-path:has(> title) {
+.booking-unit {
   cursor: pointer;
 }
 
@@ -44,11 +44,17 @@ path:has(> title) {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
+  touch-action: pan-y;
 }
 
 .svg-container {
   position: relative;
   min-height: 100vh;
+  touch-action: pan-y;
+}
+
+#svg,
+#svg svg {
   touch-action: pan-y;
 }
 
