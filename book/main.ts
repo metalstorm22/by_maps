@@ -750,27 +750,19 @@ class Unit {
       ctx.handleUnitPointerDown(this);
     };
 
-    path.addEventListener('click', (e) => {
-      handleSelect(e.clientX, e.clientY);
+    // Tap detection via pointer events — svg-pan-zoom only hooks
+    // mouse/touch events, so pointerdown/pointerup are unaffected.
+    let tapStart: { x: number; y: number; time: number } | null = null;
+    path.addEventListener('pointerdown', (e) => {
+      tapStart = { x: e.clientX, y: e.clientY, time: Date.now() };
     });
-
-    // Touch tap detection — svg-pan-zoom swallows clicks on mobile
-    let touchStart: { x: number; y: number; time: number } | null = null;
-    path.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) {
-        const t = e.touches[0];
-        touchStart = { x: t.clientX, y: t.clientY, time: Date.now() };
-      }
-    }, { passive: true });
-    path.addEventListener('touchend', (e) => {
-      if (touchStart === null) return;
-      const elapsed = Date.now() - touchStart.time;
-      const ct = e.changedTouches[0];
-      const dist = Math.hypot(ct.clientX - touchStart.x, ct.clientY - touchStart.y);
-      touchStart = null;
+    path.addEventListener('pointerup', (e) => {
+      if (tapStart === null) return;
+      const elapsed = Date.now() - tapStart.time;
+      const dist = Math.hypot(e.clientX - tapStart.x, e.clientY - tapStart.y);
+      tapStart = null;
       if (elapsed < 300 && dist < 15) {
-        e.preventDefault();
-        handleSelect(ct.clientX, ct.clientY);
+        handleSelect(e.clientX, e.clientY);
       }
     });
 

@@ -6194,25 +6194,17 @@
         animatePanTo(this.ctx.spz, current.x, current.y, targetX, targetY);
         ctx.handleUnitPointerDown(this);
       };
-      path.addEventListener("click", (e) => {
-        handleSelect(e.clientX, e.clientY);
+      let tapStart = null;
+      path.addEventListener("pointerdown", (e) => {
+        tapStart = { x: e.clientX, y: e.clientY, time: Date.now() };
       });
-      let touchStart = null;
-      path.addEventListener("touchstart", (e) => {
-        if (e.touches.length === 1) {
-          const t = e.touches[0];
-          touchStart = { x: t.clientX, y: t.clientY, time: Date.now() };
-        }
-      }, { passive: true });
-      path.addEventListener("touchend", (e) => {
-        if (touchStart === null) return;
-        const elapsed = Date.now() - touchStart.time;
-        const ct = e.changedTouches[0];
-        const dist = Math.hypot(ct.clientX - touchStart.x, ct.clientY - touchStart.y);
-        touchStart = null;
+      path.addEventListener("pointerup", (e) => {
+        if (tapStart === null) return;
+        const elapsed = Date.now() - tapStart.time;
+        const dist = Math.hypot(e.clientX - tapStart.x, e.clientY - tapStart.y);
+        tapStart = null;
         if (elapsed < 300 && dist < 15) {
-          e.preventDefault();
-          handleSelect(ct.clientX, ct.clientY);
+          handleSelect(e.clientX, e.clientY);
         }
       });
       path.addEventListener("pointerover", () => {
