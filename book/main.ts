@@ -71,7 +71,11 @@ const usesManagedTouchGestures = (): boolean => {
     return true;
   }
 
-  return window.matchMedia?.('(any-pointer: coarse)').matches ?? false;
+  if (typeof window.matchMedia !== 'function') {
+    return false;
+  }
+
+  return window.matchMedia('(any-pointer: coarse)').matches;
 };
 
 type Space = {
@@ -1090,7 +1094,7 @@ class Ctx {
 
   constructor(public readonly spz: ReturnType<typeof svgPanZoom>, public readonly svgContainer: SVGSVGElement, sheetData: SheetData) {
     this.parsedSheet = new ParsedSheet(sheetData);
-    const labelledPaths = document.querySelectorAll('path');
+    const labelledPaths = svgContainer.querySelectorAll('path');
     this.units = new Units(this, labelledPaths);
     this.unitLabels = new UnitLabels(svgContainer as SVGSVGElement, this.units.units);
     const dateRange = new DateRange(this);
