@@ -5761,6 +5761,7 @@
       __publicField(this, "hintTimeout", null);
       __publicField(this, "lastWheelEventTime", 0);
       __publicField(this, "touchStart", null);
+      __publicField(this, "isTouchDevice", false);
       __publicField(this, "handleWheel", (event) => {
         if (!event.metaKey && !event.ctrlKey) {
           this.showHint(`Hold ${this.getModifierLabel()} while scrolling to zoom the map`);
@@ -5796,6 +5797,9 @@
           };
           return;
         }
+        if (this.isTouchDevice && event.touches.length >= 2) {
+          this.spz.enablePan();
+        }
         this.touchStart = null;
       });
       __publicField(this, "handleTouchMove", (event) => {
@@ -5812,8 +5816,11 @@
         this.showHint("Use two fingers to move the map");
         this.touchStart = null;
       });
-      __publicField(this, "resetTouchGesture", () => {
+      __publicField(this, "handleTouchEnd", (event) => {
         this.touchStart = null;
+        if (this.isTouchDevice && event.touches.length === 0) {
+          this.spz.disablePan();
+        }
       });
       const element = document.querySelector("#svg-section");
       if (!(element instanceof HTMLElement)) {
@@ -5831,8 +5838,12 @@
       this.element.addEventListener("wheel", this.handleWheel, { passive: false });
       this.element.addEventListener("touchstart", this.handleTouchStart, { passive: true });
       this.element.addEventListener("touchmove", this.handleTouchMove, { passive: true });
-      this.element.addEventListener("touchend", this.resetTouchGesture, { passive: true });
-      this.element.addEventListener("touchcancel", this.resetTouchGesture, { passive: true });
+      this.element.addEventListener("touchend", this.handleTouchEnd, { passive: true });
+      this.element.addEventListener("touchcancel", this.handleTouchEnd, { passive: true });
+      if ("ontouchstart" in window) {
+        this.isTouchDevice = true;
+        this.spz.disablePan();
+      }
     }
     getModifierLabel() {
       return /Mac|iPhone|iPad|iPod/.test(navigator.platform) ? "\u2318" : "Ctrl";

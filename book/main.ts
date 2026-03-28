@@ -209,6 +209,7 @@ class EmbeddedMapGestures {
   private hintTimeout: number | null = null;
   private lastWheelEventTime = 0;
   private touchStart: { x: number; y: number } | null = null;
+  private isTouchDevice = false;
 
   constructor(
     private readonly spz: ReturnType<typeof svgPanZoom>,
@@ -232,8 +233,14 @@ class EmbeddedMapGestures {
     this.element.addEventListener('wheel', this.handleWheel, { passive: false });
     this.element.addEventListener('touchstart', this.handleTouchStart, { passive: true });
     this.element.addEventListener('touchmove', this.handleTouchMove, { passive: true });
-    this.element.addEventListener('touchend', this.resetTouchGesture, { passive: true });
-    this.element.addEventListener('touchcancel', this.resetTouchGesture, { passive: true });
+    this.element.addEventListener('touchend', this.handleTouchEnd, { passive: true });
+    this.element.addEventListener('touchcancel', this.handleTouchEnd, { passive: true });
+
+    // Disable pan on touch devices — re-enabled only during two-finger gestures
+    if ('ontouchstart' in window) {
+      this.isTouchDevice = true;
+      this.spz.disablePan();
+    }
   }
 
   private readonly handleWheel = (event: WheelEvent) => {
@@ -282,6 +289,10 @@ class EmbeddedMapGestures {
       return;
     }
 
+    // Two or more fingers — enable panning
+    if (this.isTouchDevice && event.touches.length >= 2) {
+      this.spz.enablePan();
+    }
     this.touchStart = null;
   };
 
@@ -303,8 +314,12 @@ class EmbeddedMapGestures {
     this.touchStart = null;
   };
 
-  private readonly resetTouchGesture = () => {
+  private readonly handleTouchEnd = (event: TouchEvent) => {
     this.touchStart = null;
+    // When all fingers lift, disable pan again
+    if (this.isTouchDevice && event.touches.length === 0) {
+      this.spz.disablePan();
+    }
   };
 
   private getModifierLabel(): string {
