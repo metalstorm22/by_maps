@@ -1118,55 +1118,31 @@ class Ctx {
           if (elapsed > 400 || dist > 15) return;
 
           // Hit testing on mobile Safari:
-          // 1. elementsFromPoint() fails inside svg-pan-zoom's transformed <g>
-          // 2. getScreenCTM() ignores CSS transforms on ancestors in WebKit
-          // 3. width.baseVal.value can return CSS-computed size in Safari
-          // So we use getBoundingClientRect() (always correct) to compute
-          // the offset, and read width/height attributes directly as strings.
+          // getCTM()/getScreenCTM() are unreliable in WebKit with CSS transforms,
+          // so we avoid all matrix math. Instead, use getBoundingClientRect() on
+          // each path (always correct) for a screen-space bbox pre-filter, then
+          // map screen coords to path-local coords via bbox correspondence and
+          // test with isPointInFill().
           const svgEl = this.svgContainer;
-          const svgRect = svgEl.getBoundingClientRect();
-          // Position relative to the SVG element's rendered box
-          const relX = info.x - svgRect.left;
-          const relY = info.y - svgRect.top;
-          // Scale from CSS pixels to SVG coordinate units
-          // svg-pan-zoom removes viewBox and sets width/height attrs to the original viewBox size.
-          // Read the attribute string directly — Safari's baseVal.value can return CSS-computed px.
-          const attrW = parseFloat(svgEl.getAttribute('width') || '0');
-          const attrH = parseFloat(svgEl.getAttribute('height') || '0');
-          const svgW = attrW || svgEl.viewBox.baseVal.width || svgEl.width.baseVal.value;
-          const svgH = attrH || svgEl.viewBox.baseVal.height || svgEl.height.baseVal.value;
-          const scaleX = svgW / svgRect.width;
-          const scaleY = svgH / svgRect.height;
-          const svgX = relX * scaleX;
-          const svgY = relY * scaleY;
+          const testPoint = svgEl.createSVGPoint();
 
-          // Transform from SVG root coords into the viewport <g> local coords
-          const viewport = svgEl.querySelector('.svg-pan-zoom_viewport');
-          if (viewport instanceof SVGGraphicsElement) {
-            const vpCTM = viewport.getCTM();
-            if (vpCTM) {
-              const inv = vpCTM.inverse();
-              const localX = inv.a * svgX + inv.c * svgY + inv.e;
-              const localY = inv.b * svgX + inv.d * svgY + inv.f;
-
-              const testPoint = svgEl.createSVGPoint();
-              testPoint.x = localX;
-              testPoint.y = localY;
-
-              // Quick bbox pre-filter then geometric hit test
-              for (const unit of this.units.units) {
-                const bbox = unit.path.getBBox();
-                if (localX < bbox.x || localX > bbox.x + bbox.width ||
-                    localY < bbox.y || localY > bbox.y + bbox.height) {
-                  continue;
-                }
-                testPoint.x = localX;
-                testPoint.y = localY;
-                if (unit.path.isPointInFill(testPoint)) {
-                  unit.handleTap(info.x, info.y);
-                  return;
-                }
-              }
+          for (const unit of this.units.units) {
+            const pathRect = unit.path.getBoundingClientRect();
+            // Screen-space bbox check
+            if (info.x < pathRect.left || info.x > pathRect.right ||
+                info.y < pathRect.top || info.y > pathRect.bottom) {
+              continue;
+            }
+            // Map screen coords to path-local coords using bbox correspondence.
+            // Works because svg-pan-zoom only applies scale+translate (no rotation).
+            const pathBBox = unit.path.getBBox();
+            const localX = pathBBox.x + (info.x - pathRect.left) / pathRect.width * pathBBox.width;
+            const localY = pathBBox.y + (info.y - pathRect.top) / pathRect.height * pathBBox.height;
+            testPoint.x = localX;
+            testPoint.y = localY;
+            if (unit.path.isPointInFill(testPoint)) {
+              unit.handleTap(info.x, info.y);
+              return;
             }
           }
         }, { passive: true });
