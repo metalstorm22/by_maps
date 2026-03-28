@@ -335,10 +335,10 @@ class EmbeddedMapGestures {
 
     // Two fingers — start tracking for pan/zoom
     if (event.touches.length >= 2) {
-      event.preventDefault();
       this.tapCandidate = null;
-      this.lastTouchCenter = this.touchCenter(event.touches[0], event.touches[1]);
-      this.lastTouchDist = this.touchDist(event.touches[0], event.touches[1]);
+      this.lastTouchCenter = null;
+      this.lastTouchDist = null;
+      this.showHint('Use the zoom buttons to inspect the map');
     }
   };
 
@@ -355,39 +355,6 @@ class EmbeddedMapGestures {
         this.tapCandidate = null;
       }
       return;
-    }
-
-    // Two-finger pan + pinch zoom
-    if (event.touches.length >= 2) {
-      event.preventDefault();
-      const center = this.touchCenter(event.touches[0], event.touches[1]);
-      const dist = this.touchDist(event.touches[0], event.touches[1]);
-
-      if (this.lastTouchCenter !== null) {
-        // Pan
-        const dx = center.x - this.lastTouchCenter.x;
-        const dy = center.y - this.lastTouchCenter.y;
-        const current = this.spz.getPan();
-        this.spz.pan({ x: current.x + dx, y: current.y + dy });
-      }
-
-      if (this.lastTouchDist !== null && this.lastTouchDist > 0) {
-        // Pinch zoom
-        const scale = dist / this.lastTouchDist;
-        if (Math.abs(scale - 1) > 0.01) {
-          const inverseScreenCTM = this.svg.getScreenCTM()?.inverse();
-          if (inverseScreenCTM) {
-            const point = this.svg.createSVGPoint();
-            point.x = center.x;
-            point.y = center.y;
-            const relativePoint = point.matrixTransform(inverseScreenCTM);
-            this.spz.zoomAtPointBy(scale, relativePoint);
-          }
-        }
-      }
-
-      this.lastTouchCenter = center;
-      this.lastTouchDist = dist;
     }
   };
 
@@ -1345,10 +1312,11 @@ const main = async () => {
     center: true,
     mouseWheelZoomEnabled: false,
     dblClickZoomEnabled: !isTouchDevice,
-    panEnabled: true,
+    panEnabled: !isTouchDevice,
     customEventsHandler: isTouchDevice ? {
       haltEventListeners: [
         'touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel',
+        'mousedown', 'mouseup', 'mousemove', 'mouseleave',
       ],
       init: () => {},
       destroy: () => {},
