@@ -730,9 +730,21 @@ class SpaceCard {
     });
 
     const closeButton = this.element.querySelector('.booking-map-close');
-    closeButton?.addEventListener('click', () => {
-      this.hide();
-    });
+    if (closeButton instanceof HTMLElement) {
+      // Use pointerup for reliable mobile Safari tap detection.
+      // Safari may not fire click on elements inside -webkit-overflow-scrolling containers.
+      let closeDown = false;
+      closeButton.addEventListener('pointerdown', () => { closeDown = true; }, { passive: true });
+      closeButton.addEventListener('pointerup', () => {
+        if (closeDown) {
+          closeDown = false;
+          this.hide();
+        }
+      }, { passive: true });
+      closeButton.addEventListener('pointercancel', () => { closeDown = false; }, { passive: true });
+      // Keep click as fallback for desktop
+      closeButton.addEventListener('click', () => { this.hide(); });
+    }
   }
 
   public show(show: boolean = true) {
