@@ -6464,7 +6464,7 @@
       this.spaceCard.hide();
       this.unitLabels.syncState();
       this.syncFilterControls();
-      if ("ontouchstart" in window) {
+      if ("ontouchstart" in window && navigator.maxTouchPoints > 0 && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         const section = document.querySelector("#svg-section");
         if (section) {
           let tapInfo = null;
@@ -6649,7 +6649,7 @@
       throw new Error("Not SVG");
     }
     let ctx = null;
-    const isTouchDevice = "ontouchstart" in window;
+    const isTouchDevice = "ontouchstart" in window && navigator.maxTouchPoints > 0 && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const spz = (0, import_svg_pan_zoom.default)(svg, {
       zoomEnabled: true,
       controlIconsEnabled: false,
