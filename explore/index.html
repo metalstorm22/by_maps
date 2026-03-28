@@ -1,0 +1,1405 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf8">
+  <title>Mapbox Demo</title>
+  <style>
+    #mapbox {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+    }
+
+    .map-button-active {
+      background-color: black;
+      color: white;
+    }
+
+    /* Dev ONLY CSS */
+    .whos-here-header {
+      position: absolute;
+      z-index: 2;
+    }
+  </style>
+</head>
+
+<body>
+  <div data-w-id="e177b3d5-0178-f596-3b30-d6110809e00a" data-wf-id="[&quot;e177b3d5-0178-f596-3b30-d6110809e00a&quot;]"
+    class="whos-here-header">
+    <h1 data-w-id="e177b3d5-0178-f596-3b30-d6110809e00b" data-wf-id="[&quot;e177b3d5-0178-f596-3b30-d6110809e00b&quot;]"
+      class="h1">Discover BY</h1>
+    <div data-w-id="e177b3d5-0178-f596-3b30-d6110809e00d"
+      data-wf-id="[&quot;e177b3d5-0178-f596-3b30-d6110809e00d&quot;]" class="whos-here-nav">
+      <div data-w-id="9cb46968-bf8a-a992-8822-31637b5bed53"
+        data-wf-id="[&quot;9cb46968-bf8a-a992-8822-31637b5bed53&quot;]" class="w-dyn-list">
+        <div data-w-id="9cb46968-bf8a-a992-8822-31637b5bed54"
+          data-wf-id="[&quot;9cb46968-bf8a-a992-8822-31637b5bed54&quot;]" role="list"
+          class="collection-list-5 w-dyn-items w-row">
+          <div data-w-id="9cb46968-bf8a-a992-8822-31637b5bed55_instance-0"
+            data-wf-id="[&quot;9cb46968-bf8a-a992-8822-31637b5bed55_instance-0&quot;]"
+            data-dyn-label="Categories: Offices" role="listitem" class="collection-item-4 w-dyn-item w-col w-col-2">
+            <div id="offices" data-w-id="8882c02d-73e1-2773-4142-6d45516589b7_instance-0"
+              data-wf-id="[&quot;8882c02d-73e1-2773-4142-6d45516589b7_instance-0&quot;]"
+              data-has-binding-on-children="true" class="text-block-4">Offices</div>
+          </div>
+          <div data-w-id="9cb46968-bf8a-a992-8822-31637b5bed55_instance-1"
+            data-wf-id="[&quot;9cb46968-bf8a-a992-8822-31637b5bed55_instance-1&quot;]"
+            data-dyn-label="Categories: Food &amp; Drink" role="listitem"
+            class="collection-item-4 w-dyn-item w-col w-col-2">
+            <div id="food-and-drink" data-w-id="8882c02d-73e1-2773-4142-6d45516589b7_instance-1"
+              data-wf-id="[&quot;8882c02d-73e1-2773-4142-6d45516589b7_instance-1&quot;]"
+              data-has-binding-on-children="true" class="text-block-4">Food &amp; Drink</div>
+          </div>
+          <div data-w-id="9cb46968-bf8a-a992-8822-31637b5bed55_instance-2"
+            data-wf-id="[&quot;9cb46968-bf8a-a992-8822-31637b5bed55_instance-2&quot;]"
+            data-dyn-label="Categories: Things to do" role="listitem"
+            class="collection-item-4 w-dyn-item w-col w-col-2">
+            <div id="things-to-do" data-w-id="8882c02d-73e1-2773-4142-6d45516589b7_instance-2"
+              data-wf-id="[&quot;8882c02d-73e1-2773-4142-6d45516589b7_instance-2&quot;]"
+              data-has-binding-on-children="true" class="text-block-4">Things to do</div>
+          </div>
+          <div data-w-id="9cb46968-bf8a-a992-8822-31637b5bed55_instance-3"
+            data-wf-id="[&quot;9cb46968-bf8a-a992-8822-31637b5bed55_instance-3&quot;]" data-dyn-label="Categories: Shop"
+            role="listitem" class="collection-item-4 w-dyn-item w-col w-col-2">
+            <div id="shop" data-w-id="8882c02d-73e1-2773-4142-6d45516589b7_instance-3"
+              data-wf-id="[&quot;8882c02d-73e1-2773-4142-6d45516589b7_instance-3&quot;]"
+              data-has-binding-on-children="true" class="text-block-4">Shop</div>
+          </div>
+          <div data-w-id="9cb46968-bf8a-a992-8822-31637b5bed55_instance-4"
+            data-wf-id="[&quot;9cb46968-bf8a-a992-8822-31637b5bed55_instance-4&quot;]"
+            data-dyn-label="Categories: Pop-ups" role="listitem" class="collection-item-4 w-dyn-item w-col w-col-2">
+            <div id="pop-ups" data-w-id="8882c02d-73e1-2773-4142-6d45516589b7_instance-4"
+              data-wf-id="[&quot;8882c02d-73e1-2773-4142-6d45516589b7_instance-4&quot;]"
+              data-has-binding-on-children="true" class="text-block-4">Pop-ups</div>
+          </div>
+          <div data-w-id="9cb46968-bf8a-a992-8822-31637b5bed55_instance-5"
+            data-wf-id="[&quot;9cb46968-bf8a-a992-8822-31637b5bed55_instance-5&quot;]"
+            data-dyn-label="Categories: Health &amp; Beauty" role="listitem"
+            class="collection-item-4 w-dyn-item w-col w-col-2">
+            <div id="health-and-beauty" data-w-id="8882c02d-73e1-2773-4142-6d45516589b7_instance-5"
+              data-wf-id="[&quot;8882c02d-73e1-2773-4142-6d45516589b7_instance-5&quot;]"
+              data-has-binding-on-children="true" class="text-block-4">Health &amp; Beauty</div>
+          </div>
+        </div>
+        <div data-w-id="9cb46968-bf8a-a992-8822-31637b5bed56"
+          data-wf-id="[&quot;9cb46968-bf8a-a992-8822-31637b5bed56&quot;]" class="w-dyn-hide w-dyn-empty">
+          <div data-w-id="9cb46968-bf8a-a992-8822-31637b5bed57"
+            data-wf-id="[&quot;9cb46968-bf8a-a992-8822-31637b5bed57&quot;]">No items found.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="tenants-list" data-w-id="cedbbe73-c293-7211-b008-a9702e124b67"
+    data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b67&quot;]" class="collection-list-wrapper-6 w-dyn-list">
+    <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b68"
+      data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b68&quot;]" role="list" class="w-dyn-items">
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-0"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-0&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b9974e6b1bf4628a2a83ae"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 1" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-0"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-0&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b9974e6b1bf4628a2a83ae"
+          data-w-collection-source="cms">Linnet Jewellery</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-0"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-0&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b9974e6b1bf4628a2a83ae"
+          data-w-collection-source="cms">51.50677</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-0"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-0&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b9974e6b1bf4628a2a83ae"
+          data-w-collection-source="cms">-0.09173</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-0"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-0&quot;]"
+          data-w-item-id="69b9974e6b1bf4628a2a83ae" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-0"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-0&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b9974e6b1bf4628a2a83ae"
+          data-w-collection-source="cms">http://www.linnetjewellery.com/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-0"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-0&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b9974e6b1bf4628a2a83ae"
+          data-w-collection-source="cms" class="w-dyn-bind-empty wf-empty"></div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-0"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-0&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b9974e6b1bf4628a2a83ae"
+          data-w-collection-source="cms" class="w-dyn-bind-empty wf-empty"></div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-0"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-0&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b9974e6b1bf4628a2a83ae"
+          data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Thu: 10am to 6pm<br>Fri–Sat: 10am to 7pm<br>Sun: 11am to 5pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-1"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-1&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83355fd887f36edae02cf"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 2" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-1"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-1&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83355fd887f36edae02cf"
+          data-w-collection-source="cms">Plaza Khao Gaeng</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-1"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-1&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83355fd887f36edae02cf"
+          data-w-collection-source="cms">51.5063</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-1"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-1&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83355fd887f36edae02cf"
+          data-w-collection-source="cms">-0.09162</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-1"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-1&quot;]"
+          data-w-item-id="69b83355fd887f36edae02cf" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-1"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-1&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83355fd887f36edae02cf"
+          data-w-collection-source="cms">https://boroughyards.com/retailer/vinoteca/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-1"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-1&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83355fd887f36edae02cf"
+          data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-1"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-1&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83355fd887f36edae02cf"
+          data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-1"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-1&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83355fd887f36edae02cf"
+          data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Sat: 12pm to 10:30pm‍<br>‍Sun: 12pm to 8:30pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-2"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-2&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832e51afee402371a72f0"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 3" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-2"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-2&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832e51afee402371a72f0"
+          data-w-collection-source="cms">Cahoots</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-2"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-2&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832e51afee402371a72f0"
+          data-w-collection-source="cms">51.50608</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-2"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-2&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832e51afee402371a72f0"
+          data-w-collection-source="cms">-0.09165</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-2"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-2&quot;]"
+          data-w-item-id="69b832e51afee402371a72f0" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-2"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-2&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832e51afee402371a72f0"
+          data-w-collection-source="cms">https://www.cahoots.co.uk/cahoots-postal-office/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-2"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-2&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832e51afee402371a72f0"
+          data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-2"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-2&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832e51afee402371a72f0"
+          data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-2"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-2&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832e51afee402371a72f0"
+          data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Thu: 4pm to 12am<br>Fri: 2pm to 12am<br>Sat: 12pm to 12am<br>Sun: 2pm to 11pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-3"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-3&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832a2f93c2c991759c554"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 4" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-3"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-3&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832a2f93c2c991759c554"
+          data-w-collection-source="cms">Bancone</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-3"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-3&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832a2f93c2c991759c554"
+          data-w-collection-source="cms">51.50655</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-3"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-3&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832a2f93c2c991759c554"
+          data-w-collection-source="cms">-0.09159</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-3"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-3&quot;]"
+          data-w-item-id="69b832a2f93c2c991759c554" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-3"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-3&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832a2f93c2c991759c554"
+          data-w-collection-source="cms">http://www.bancone.co.uk/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-3"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-3&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832a2f93c2c991759c554"
+          data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-3"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-3&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832a2f93c2c991759c554"
+          data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-3"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-3&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b832a2f93c2c991759c554"
+          data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Wed: 12pm to 10pm‍<br>‍Thu–Sat: 12pm to 10:30pm‍<br>‍Sun: 12pm to 9:30pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-4"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-4&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83250fe195ad33602a8a3"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 5" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-4"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-4&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83250fe195ad33602a8a3"
+          data-w-collection-source="cms">Akara</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-4"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-4&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83250fe195ad33602a8a3"
+          data-w-collection-source="cms">51.50642</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-4"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-4&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83250fe195ad33602a8a3"
+          data-w-collection-source="cms">-0.09161</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-4"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-4&quot;]"
+          data-w-item-id="69b83250fe195ad33602a8a3" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-4"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-4&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83250fe195ad33602a8a3"
+          data-w-collection-source="cms">http://www.akaralondon.co.uk/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-4"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-4&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83250fe195ad33602a8a3"
+          data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-4"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-4&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83250fe195ad33602a8a3"
+          data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-4"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-4&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83250fe195ad33602a8a3"
+          data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon: 5pm to 10:30pm<br>Tue–Sat: 12pm to 10:30pm<br>Sun: 12pm to 9:30pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-5"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-5&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83206cf86149a40ec6b69"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 6" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-5"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-5&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83206cf86149a40ec6b69"
+          data-w-collection-source="cms">Old Maps Library</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-5"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-5&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83206cf86149a40ec6b69"
+          data-w-collection-source="cms">51.5067</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-5"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-5&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83206cf86149a40ec6b69"
+          data-w-collection-source="cms">-0.09185</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-5"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-5&quot;]"
+          data-w-item-id="69b83206cf86149a40ec6b69" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-5"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-5&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83206cf86149a40ec6b69"
+          data-w-collection-source="cms">https://www.oldmapslibrary.com/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-5"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-5&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83206cf86149a40ec6b69"
+          data-w-collection-source="cms">Shopping</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-5"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-5&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83206cf86149a40ec6b69"
+          data-w-collection-source="cms">shop</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-5"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-5&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b83206cf86149a40ec6b69"
+          data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Thu: 10am to 6pm<br>Fri–Sat: 10am to 7pm<br>Sun: 11am to 5pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-6"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-6&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831bf5a87ce826bee2547"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 7" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-6"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-6&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831bf5a87ce826bee2547"
+          data-w-collection-source="cms">Sknfed</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-6"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-6&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831bf5a87ce826bee2547"
+          data-w-collection-source="cms">51.50677</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-6"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-6&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831bf5a87ce826bee2547"
+          data-w-collection-source="cms">-0.09149</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-6"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-6&quot;]"
+          data-w-item-id="69b831bf5a87ce826bee2547" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-6"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-6&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831bf5a87ce826bee2547"
+          data-w-collection-source="cms">https://sknfed.com/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-6"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-6&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831bf5a87ce826bee2547"
+          data-w-collection-source="cms">Wellness</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-6"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-6&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831bf5a87ce826bee2547"
+          data-w-collection-source="cms">health-and-beauty</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-6"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-6&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831bf5a87ce826bee2547"
+          data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Fri: 11am to 6pm‍<br>‍Sat: 10am to 7pm‍<br>‍Sun: 11am to 5pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-7"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-7&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831722fabeabc79244be2"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 8" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-7"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-7&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831722fabeabc79244be2"
+          data-w-collection-source="cms">Pasham Boutique</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-7"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-7&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831722fabeabc79244be2"
+          data-w-collection-source="cms">51.50676</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-7"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-7&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831722fabeabc79244be2"
+          data-w-collection-source="cms">-0.09185</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-7"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-7&quot;]"
+          data-w-item-id="69b831722fabeabc79244be2" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-7"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-7&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831722fabeabc79244be2"
+          data-w-collection-source="cms">https://pasham.london/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-7"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-7&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831722fabeabc79244be2"
+          data-w-collection-source="cms">Shopping</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-7"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-7&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831722fabeabc79244be2"
+          data-w-collection-source="cms">shop</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-7"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-7&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b831722fabeabc79244be2"
+          data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Thu: 10am to 6pm<br>Fri–Sat: 10am to 7pm<br>Sun: 11am to 5pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-8"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-8&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8311f53e89d7618959559"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 9" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-8"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-8&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8311f53e89d7618959559"
+          data-w-collection-source="cms">La Lune</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-8"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-8&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8311f53e89d7618959559"
+          data-w-collection-source="cms">51.5067</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-8"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-8&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8311f53e89d7618959559"
+          data-w-collection-source="cms">-0.09151</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-8"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-8&quot;]"
+          data-w-item-id="69b8311f53e89d7618959559" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-8"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-8&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8311f53e89d7618959559"
+          data-w-collection-source="cms">https://www.lalunelondon.com/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-8"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-8&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8311f53e89d7618959559"
+          data-w-collection-source="cms">Shopping</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-8"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-8&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8311f53e89d7618959559"
+          data-w-collection-source="cms">shop</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-8"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-8&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8311f53e89d7618959559"
+          data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Thu: 11am to 6pm‍<br>‍Fri: 11am to 6:30pm‍<br>‍Sat: 10:30am to 6:30pm‍<br>‍Sun: 11am to 5:30pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-9"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-9&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b830d8f93c2c9917594d2e"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 10" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-9"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-9&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b830d8f93c2c9917594d2e"
+          data-w-collection-source="cms">Loof &amp; Loom</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-9"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-9&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b830d8f93c2c9917594d2e"
+          data-w-collection-source="cms">51.5067</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-9"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-9&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b830d8f93c2c9917594d2e"
+          data-w-collection-source="cms">-0.09172</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-9"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-9&quot;]"
+          data-w-item-id="69b830d8f93c2c9917594d2e" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-9"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-9&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b830d8f93c2c9917594d2e"
+          data-w-collection-source="cms">https://www.instagram.com/loofandloomlondon/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-9"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-9&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b830d8f93c2c9917594d2e"
+          data-w-collection-source="cms">Shopping</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-9"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-9&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b830d8f93c2c9917594d2e"
+          data-w-collection-source="cms">shop</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-9"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-9&quot;]" data-has-binding-on-children="true"
+          data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b830d8f93c2c9917594d2e"
+          data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Thu: 10am to 6pm<br>Fri–Sat: 10am to 7pm<br>Sun: 11am to 5pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-10"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-10&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b829242a3c2613d8a525c6"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 11" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-10"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-10&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b829242a3c2613d8a525c6" data-w-collection-source="cms">Handmade Stories</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-10"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-10&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b829242a3c2613d8a525c6" data-w-collection-source="cms">51.50671</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-10"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-10&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b829242a3c2613d8a525c6" data-w-collection-source="cms">-0.0916</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-10"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-10&quot;]"
+          data-w-item-id="69b829242a3c2613d8a525c6" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-10"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-10&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b829242a3c2613d8a525c6" data-w-collection-source="cms">https://www.handmadestoriesworld.com/
+        </div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-10"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-10&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b829242a3c2613d8a525c6" data-w-collection-source="cms">Shopping</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-10"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-10&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b829242a3c2613d8a525c6" data-w-collection-source="cms">shop</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-10"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-10&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b829242a3c2613d8a525c6" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon &amp; Sun: 11am to 5pm<br>Tue: 10am to 6pm<br>Wed–Sat: 10am to 7pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-11"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-11&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b828ba5e0afc2e39354be1"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 12" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-11"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-11&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b828ba5e0afc2e39354be1" data-w-collection-source="cms">Alain Ducasse</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-11"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-11&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b828ba5e0afc2e39354be1" data-w-collection-source="cms">51.50571</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-11"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-11&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b828ba5e0afc2e39354be1" data-w-collection-source="cms">-0.09215</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-11"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-11&quot;]"
+          data-w-item-id="69b828ba5e0afc2e39354be1" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-11"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-11&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b828ba5e0afc2e39354be1" data-w-collection-source="cms">
+          https://www.lechocolat-alainducasse.com/uk/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-11"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-11&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b828ba5e0afc2e39354be1" data-w-collection-source="cms">Shopping</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-11"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-11&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b828ba5e0afc2e39354be1" data-w-collection-source="cms">shop</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-11"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-11&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b828ba5e0afc2e39354be1" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Sat: 11am to 7pm<br>Sun: 10am to 5pm <br><br>‍(Hours might change this summer)</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-12"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-12&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8280df3426a401a3a71e8"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 13" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-12"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-12&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8280df3426a401a3a71e8" data-w-collection-source="cms">FORA</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-12"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-12&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8280df3426a401a3a71e8" data-w-collection-source="cms">51.50609</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-12"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-12&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8280df3426a401a3a71e8" data-w-collection-source="cms">-0.09215</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-12"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-12&quot;]"
+          data-w-item-id="69b8280df3426a401a3a71e8" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-12"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-12&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8280df3426a401a3a71e8" data-w-collection-source="cms">
+          https://www.foraspace.com/london-workspaces/borough-yards</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-12"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-12&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8280df3426a401a3a71e8" data-w-collection-source="cms">Culture</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-12"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-12&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8280df3426a401a3a71e8" data-w-collection-source="cms">offices</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-12"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-12&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8280df3426a401a3a71e8" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Fri: 8:30am to 6pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-13"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-13&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b827799ceabc61c937f30f"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 14" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-13"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-13&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b827799ceabc61c937f30f" data-w-collection-source="cms">Café François</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-13"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-13&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b827799ceabc61c937f30f" data-w-collection-source="cms">51.50586</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-13"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-13&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b827799ceabc61c937f30f" data-w-collection-source="cms">-0.0917</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-13"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-13&quot;]"
+          data-w-item-id="69b827799ceabc61c937f30f" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-13"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-13&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b827799ceabc61c937f30f" data-w-collection-source="cms">https://www.cafefrancois.london/
+        </div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-13"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-13&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b827799ceabc61c937f30f" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-13"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-13&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b827799ceabc61c937f30f" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-13"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-13&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b827799ceabc61c937f30f" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon: 11am to midnight‍<br>‍Tue–Fri: 8am to midnight‍<br>‍Sat: 9am to midnight‍<br>‍Sun: 12pm to 5pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-14"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-14&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8272093bc6d1578b0044f"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 15" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-14"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-14&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8272093bc6d1578b0044f" data-w-collection-source="cms">Brother Marcus</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-14"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-14&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8272093bc6d1578b0044f" data-w-collection-source="cms">51.50545</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-14"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-14&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8272093bc6d1578b0044f" data-w-collection-source="cms">-0.09227</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-14"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-14&quot;]"
+          data-w-item-id="69b8272093bc6d1578b0044f" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-14"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-14&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8272093bc6d1578b0044f" data-w-collection-source="cms">
+          https://brothermarcus.co.uk/locations/boroughyards/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-14"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-14&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8272093bc6d1578b0044f" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-14"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-14&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8272093bc6d1578b0044f" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-14"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-14&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8272093bc6d1578b0044f" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Fri: 8:30am to 11pm<br>Sat: 9am to 11pm<br>Sun: 9:30am to 5pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-15"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-15&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b826d0e76fefc95aaf83d0"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 16" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-15"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-15&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b826d0e76fefc95aaf83d0" data-w-collection-source="cms">Barrafina</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-15"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-15&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b826d0e76fefc95aaf83d0" data-w-collection-source="cms">51.50547</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-15"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-15&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b826d0e76fefc95aaf83d0" data-w-collection-source="cms">-0.09209</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-15"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-15&quot;]"
+          data-w-item-id="69b826d0e76fefc95aaf83d0" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-15"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-15&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b826d0e76fefc95aaf83d0" data-w-collection-source="cms">
+          https://www.barrafina.com/locations/borough-yards/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-15"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-15&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b826d0e76fefc95aaf83d0" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-15"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-15&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b826d0e76fefc95aaf83d0" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-15"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-15&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b826d0e76fefc95aaf83d0" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Sun–Tue: 12pm to 3pm / 5pm to 9:30pm<br>Wed–Sat: 12pm to 3pm / 5pm to 10pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-16"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-16&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8266d93bc6d1578afd5db"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 17" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-16"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-16&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8266d93bc6d1578afd5db" data-w-collection-source="cms">Parrillan</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-16"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-16&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8266d93bc6d1578afd5db" data-w-collection-source="cms">51.50572</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-16"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-16&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8266d93bc6d1578afd5db" data-w-collection-source="cms">-0.09195</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-16"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-16&quot;]"
+          data-w-item-id="69b8266d93bc6d1578afd5db" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-16"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-16&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8266d93bc6d1578afd5db" data-w-collection-source="cms">
+          https://www.parrillan.co.uk/borough-yards/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-16"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-16&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8266d93bc6d1578afd5db" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-16"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-16&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8266d93bc6d1578afd5db" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-16"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-16&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8266d93bc6d1578afd5db" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon: Closed</p>
+          <p>Tue–Fri:<br>Lunch: 12pm to 3pm<br>Dinner: 5pm to 9:30pm</p>
+          <p>Sat:<br>Lunch: 12pm to 3pm<br>Dinner: 3pm to 9:30pm</p>
+          <p>Sun: Closed</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-17"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-17&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b825f91dcfaa08863c75b9"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 18" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-17"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-17&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825f91dcfaa08863c75b9" data-w-collection-source="cms">Bar Daskal</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-17"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-17&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825f91dcfaa08863c75b9" data-w-collection-source="cms">51.50532</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-17"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-17&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825f91dcfaa08863c75b9" data-w-collection-source="cms">-0.09201</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-17"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-17&quot;]"
+          data-w-item-id="69b825f91dcfaa08863c75b9" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-17"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-17&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825f91dcfaa08863c75b9" data-w-collection-source="cms">https://www.bardaskal.co.uk/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-17"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-17&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825f91dcfaa08863c75b9" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-17"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-17&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825f91dcfaa08863c75b9" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-17"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-17&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825f91dcfaa08863c75b9" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Sun–Mon: Closed‍<br>‍Tue–Thu: 5pm to 11:30pm‍<br>‍Fri–Sat: 3pm to 11:30pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-18"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-18&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b825846afa8ea26675ac4d"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 19" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-18"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-18&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825846afa8ea26675ac4d" data-w-collection-source="cms">Lucky Tea</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-18"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-18&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825846afa8ea26675ac4d" data-w-collection-source="cms">51.50675</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-18"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-18&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825846afa8ea26675ac4d" data-w-collection-source="cms">-0.09235</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-18"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-18&quot;]"
+          data-w-item-id="69b825846afa8ea26675ac4d" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-18"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-18&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825846afa8ea26675ac4d" data-w-collection-source="cms">https://www.instagram.com/luckyteauk/
+        </div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-18"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-18&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825846afa8ea26675ac4d" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-18"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-18&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825846afa8ea26675ac4d" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-18"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-18&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b825846afa8ea26675ac4d" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Tue–Sun: 11:30am to 9pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-19"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-19&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8253608b1bda8bee831c2"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 20" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-19"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-19&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8253608b1bda8bee831c2" data-w-collection-source="cms">The After School Cookie Club</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-19"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-19&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8253608b1bda8bee831c2" data-w-collection-source="cms">51.50675</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-19"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-19&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8253608b1bda8bee831c2" data-w-collection-source="cms">-0.09218</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-19"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-19&quot;]"
+          data-w-item-id="69b8253608b1bda8bee831c2" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-19"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-19&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8253608b1bda8bee831c2" data-w-collection-source="cms">
+          http://www.theafterschoolcookieclub.com</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-19"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-19&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8253608b1bda8bee831c2" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-19"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-19&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8253608b1bda8bee831c2" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-19"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-19&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8253608b1bda8bee831c2" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Sun–Wed: 10am to 9pm‍<br>‍Thu–Sat: 10am to 10pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-20"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-20&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b824c440e3336040a05fe1"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 21" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-20"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-20&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b824c440e3336040a05fe1" data-w-collection-source="cms">Santa Nata</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-20"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-20&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b824c440e3336040a05fe1" data-w-collection-source="cms">51.50625</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-20"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-20&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b824c440e3336040a05fe1" data-w-collection-source="cms">-0.09215</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-20"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-20&quot;]"
+          data-w-item-id="69b824c440e3336040a05fe1" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-20"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-20&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b824c440e3336040a05fe1" data-w-collection-source="cms">https://santanata.com/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-20"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-20&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b824c440e3336040a05fe1" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-20"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-20&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b824c440e3336040a05fe1" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-20"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-20&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b824c440e3336040a05fe1" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Thu: 10am to 6pm‍<br>‍Fri–Sun: 10am to 9pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-21"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-21&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8246822f2458dab25695d"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 22" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-21"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-21&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8246822f2458dab25695d" data-w-collection-source="cms">Re:Lax</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-21"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-21&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8246822f2458dab25695d" data-w-collection-source="cms">51.50588</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-21"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-21&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8246822f2458dab25695d" data-w-collection-source="cms">-0.09212</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-21"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-21&quot;]"
+          data-w-item-id="69b8246822f2458dab25695d" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-21"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-21&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8246822f2458dab25695d" data-w-collection-source="cms">https://www.relax-ldn.com</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-21"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-21&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8246822f2458dab25695d" data-w-collection-source="cms">Wellness</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-21"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-21&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8246822f2458dab25695d" data-w-collection-source="cms">health-and-beauty</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-21"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-21&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8246822f2458dab25695d" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Fri: 10am to 8pm‍<br>‍Sat–Sun: 10am to 5pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-22"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-22&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b823bfe8b15d0584835a7e"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 23" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-22"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-22&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b823bfe8b15d0584835a7e" data-w-collection-source="cms">Hagen Coffee</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-22"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-22&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b823bfe8b15d0584835a7e" data-w-collection-source="cms">51.50707</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-22"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-22&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b823bfe8b15d0584835a7e" data-w-collection-source="cms">-0.0925</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-22"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-22&quot;]"
+          data-w-item-id="69b823bfe8b15d0584835a7e" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-22"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-22&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b823bfe8b15d0584835a7e" data-w-collection-source="cms">https://www.thehagenproject.com/
+        </div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-22"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-22&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b823bfe8b15d0584835a7e" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-22"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-22&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b823bfe8b15d0584835a7e" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-22"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-22&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b823bfe8b15d0584835a7e" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Fri: 7am to 6pm<br>Sat–Sun: 8am to 6pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-23"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-23&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8238343384b9b53d48fb3"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 24" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-23"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-23&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8238343384b9b53d48fb3" data-w-collection-source="cms">Amorino</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-23"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-23&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8238343384b9b53d48fb3" data-w-collection-source="cms">51.50633</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-23"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-23&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8238343384b9b53d48fb3" data-w-collection-source="cms">-0.09215</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-23"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-23&quot;]"
+          data-w-item-id="69b8238343384b9b53d48fb3" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-23"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-23&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8238343384b9b53d48fb3" data-w-collection-source="cms">https://www.amorino.com/en/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-23"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-23&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8238343384b9b53d48fb3" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-23"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-23&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8238343384b9b53d48fb3" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-23"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-23&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8238343384b9b53d48fb3" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Wed: 10:30am to 11:30pm<br>Thu–Fri: 10:30am to midnight<br>Sat: 10am to midnight<br>Sun: 10am to
+            11:30pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-24"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-24&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b8229160cd6c0c0849bceb"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 25" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-24"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-24&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8229160cd6c0c0849bceb" data-w-collection-source="cms">Ted's Grooming Room</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-24"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-24&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8229160cd6c0c0849bceb" data-w-collection-source="cms">51.50616</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-24"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-24&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8229160cd6c0c0849bceb" data-w-collection-source="cms">-0.09215</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-24"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-24&quot;]"
+          data-w-item-id="69b8229160cd6c0c0849bceb" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-24"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-24&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8229160cd6c0c0849bceb" data-w-collection-source="cms">https://www.amorino.com/en/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-24"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-24&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8229160cd6c0c0849bceb" data-w-collection-source="cms">Wellness</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-24"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-24&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8229160cd6c0c0849bceb" data-w-collection-source="cms">health-and-beauty</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-24"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-24&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b8229160cd6c0c0849bceb" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Fri: 9am to 8pm (Last entry 7:30pm)<br>Sat: 9am to 6:30pm (Last entry 6pm)<br>Sun: 10am to 6:30pm (Last
+            entry 6pm)</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-25"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-25&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b820bf39eac94e12a42417"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 26" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-25"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-25&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b820bf39eac94e12a42417" data-w-collection-source="cms">Atis</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-25"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-25&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b820bf39eac94e12a42417" data-w-collection-source="cms">51.50602</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-25"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-25&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b820bf39eac94e12a42417" data-w-collection-source="cms">-0.09214</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-25"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-25&quot;]"
+          data-w-item-id="69b820bf39eac94e12a42417" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-25"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-25&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b820bf39eac94e12a42417" data-w-collection-source="cms" class="w-dyn-bind-empty wf-empty">
+        </div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-25"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-25&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b820bf39eac94e12a42417" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-25"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-25&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b820bf39eac94e12a42417" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-25"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-25&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b820bf39eac94e12a42417" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Thu: 11am to 8pm<br>Fri: 11am to 3pm<br>Sat: 11am to 7pm<br>Sun: 12pm to 7pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-26"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-26&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b81e8adafa0429fe226d2a"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 27" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-26"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-26&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81e8adafa0429fe226d2a" data-w-collection-source="cms">Ace &amp; Tate</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-26"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-26&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81e8adafa0429fe226d2a" data-w-collection-source="cms">51.50596</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-26"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-26&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81e8adafa0429fe226d2a" data-w-collection-source="cms">-0.09213</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-26"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-26&quot;]"
+          data-w-item-id="69b81e8adafa0429fe226d2a" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-26"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-26&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81e8adafa0429fe226d2a" data-w-collection-source="cms">https://www.aceandtate.com/gb</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-26"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-26&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81e8adafa0429fe226d2a" data-w-collection-source="cms">Shopping</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-26"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-26&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81e8adafa0429fe226d2a" data-w-collection-source="cms">shop</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-26"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-26&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81e8adafa0429fe226d2a" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Sat: 10:30am to 7pm<br>Sun: 10am to 5pm</p>
+          <p>‍</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-27"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-27&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b81dfe35afc5afbe8edb39"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 28" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-27"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-27&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81dfe35afc5afbe8edb39" data-w-collection-source="cms">Eat Momo</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-27"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-27&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81dfe35afc5afbe8edb39" data-w-collection-source="cms">51.50678</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-27"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-27&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81dfe35afc5afbe8edb39" data-w-collection-source="cms">-0.09268</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-27"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-27&quot;]"
+          data-w-item-id="69b81dfe35afc5afbe8edb39" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-27"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-27&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81dfe35afc5afbe8edb39" data-w-collection-source="cms">https://www.eatmomo.uk/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-27"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-27&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81dfe35afc5afbe8edb39" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-27"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-27&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81dfe35afc5afbe8edb39" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-27"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-27&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81dfe35afc5afbe8edb39" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Sun–Mon: 11am to 7pm‍<br>‍Tue–Sat: 11am to 9pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-28"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-28&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b81b01aad2faafb2dee400"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 29" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-28"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-28&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81b01aad2faafb2dee400" data-w-collection-source="cms">Burger &amp; Beyond</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-28"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-28&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81b01aad2faafb2dee400" data-w-collection-source="cms">51.50701</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-28"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-28&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81b01aad2faafb2dee400" data-w-collection-source="cms">-0.09266</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-28"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-28&quot;]"
+          data-w-item-id="69b81b01aad2faafb2dee400" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-28"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-28&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81b01aad2faafb2dee400" data-w-collection-source="cms">https://burgerandbeyond.co.uk/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-28"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-28&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81b01aad2faafb2dee400" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-28"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-28&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81b01aad2faafb2dee400" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-28"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-28&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b81b01aad2faafb2dee400" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Wed: 12pm to 10pm‍<br>‍Thu–Sat: 12pm to 11pm<br>‍‍Sun: 12pm to 9pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-29"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-29&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b818c260a018190928c9b3"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 30" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-29"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-29&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b818c260a018190928c9b3" data-w-collection-source="cms">Angry Crab Shack</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-29"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-29&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b818c260a018190928c9b3" data-w-collection-source="cms">51.50691</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-29"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-29&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b818c260a018190928c9b3" data-w-collection-source="cms">-0.09266</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-29"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-29&quot;]"
+          data-w-item-id="69b818c260a018190928c9b3" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-29"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-29&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b818c260a018190928c9b3" data-w-collection-source="cms">https://angrycrabshack.co.uk/</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-29"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-29&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b818c260a018190928c9b3" data-w-collection-source="cms">Food &amp; Drink</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-29"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-29&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b818c260a018190928c9b3" data-w-collection-source="cms">food-and-drink</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-29"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-29&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b818c260a018190928c9b3" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Thu: 12pm to 9pm‍<br>‍Fri–Sat: 12pm to 9:30pm‍<br>‍Sun: 12pm to 8pm</p>
+        </div>
+      </div>
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b69_instance-30"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b69_instance-30&quot;]"
+        data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-item-id="69b80c741adc93b5f5beb0ab"
+        data-w-collection-source="cms" data-dyn-label="Collection Item 31" role="listitem" class="w-dyn-item">
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6a_instance-30"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6a_instance-30&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b80c741adc93b5f5beb0ab" data-w-collection-source="cms">Everyman Cinema</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6b_instance-30"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6b_instance-30&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b80c741adc93b5f5beb0ab" data-w-collection-source="cms">51.5056</div>
+        <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6c_instance-30"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6c_instance-30&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b80c741adc93b5f5beb0ab" data-w-collection-source="cms">-0.09222</div><img
+          src="data:image/svg+xml,%3Csvg%20width%3D%2210001px%22%20height%3D%22100px%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3C%2Fsvg%3E"
+          alt="" data-w-collection-id="69b2bd611d239b2ad76d96a6" data-w-collection-source="cms"
+          data-w-id="cedbbe73-c293-7211-b008-a9702e124b6d_instance-30"
+          data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6d_instance-30&quot;]"
+          data-w-item-id="69b80c741adc93b5f5beb0ab" loading="lazy" data-w-responsive="true">
+        <div data-w-id="3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-30"
+          data-wf-id="[&quot;3bc7a9a5-6cbc-fdcd-282a-bb8c53c10f90_instance-30&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b80c741adc93b5f5beb0ab" data-w-collection-source="cms">
+          https://www.everymancinema.com/borough-yards</div>
+        <div data-w-id="99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-30"
+          data-wf-id="[&quot;99ca010f-51ac-3cc1-6b05-d113b60670d1_instance-30&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b80c741adc93b5f5beb0ab" data-w-collection-source="cms">Things to do</div>
+        <div data-w-id="5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-30"
+          data-wf-id="[&quot;5aada2e5-aacf-33b9-bd44-9eb44887c8d0_instance-30&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b80c741adc93b5f5beb0ab" data-w-collection-source="cms">things-to-do</div>
+        <div data-w-id="896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-30"
+          data-wf-id="[&quot;896496eb-f5c7-5eea-6ab7-30f44ae9e5b8_instance-30&quot;]"
+          data-has-binding-on-children="true" data-w-collection-id="69b2bd611d239b2ad76d96a6"
+          data-w-item-id="69b80c741adc93b5f5beb0ab" data-w-collection-source="cms" class="rich-text-block w-richtext">
+          <p>Mon–Sun: 10am to midnight</p>
+          <p>‍</p>
+          <p>‍</p>
+        </div>
+      </div>
+    </div>
+    <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6e"
+      data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6e&quot;]" class="w-dyn-hide w-dyn-empty">
+      <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b6f"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b6f&quot;]">No items found.</div>
+    </div>
+  </div>
+  <div data-w-id="a45c7b55-f5f4-d73c-b0fd-d66a8a8c67a6" data-wf-id="[&quot;a45c7b55-f5f4-d73c-b0fd-d66a8a8c67a6&quot;]"
+    class="code-embed-4 w-embed w-iframe w-script">
+    <div id="mapbox"></div>
+  </div>
+  <div id="map-card" data-w-id="cedbbe73-c293-7211-b008-a9702e124b72"
+    data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b72&quot;]" class="div-block-31" style="display: block;"><img
+      class="image-9"
+      src="https://cdn.prod.website-files.com/69b2bc331705e9db3e741005/69b83950dae89a14068fa498_520D30BC-224E-4423-9D21-3C2A956DA80D.jpg"
+      width="Auto" height="Auto" alt="" data-w-id="cedbbe73-c293-7211-b008-a9702e124b73"
+      data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b73&quot;]" id="map-card-image" loading="lazy" srcset="">
+    <div id="map-card-category" data-w-id="ff273229-509f-fa09-6b7e-dc283b63d5e7"
+      data-wf-id="[&quot;ff273229-509f-fa09-6b7e-dc283b63d5e7&quot;]" class="text-block-5">Shopping</div>
+    <div data-w-id="cedbbe73-c293-7211-b008-a9702e124b74"
+      data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b74&quot;]" class="div-block-32">
+      <h1 id="map-card-title" data-w-id="cedbbe73-c293-7211-b008-a9702e124b75"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b75&quot;]" class="heading-4">The After School Cookie Club
+      </h1>
+      <div id="map-card-timings" data-w-id="e02a1b42-161d-c682-0231-75dd4247de52"
+        data-wf-id="[&quot;e02a1b42-161d-c682-0231-75dd4247de52&quot;]" class="text-block-6">Mon—Sat: 07:00—21:00
+      </div><a id="map-card-link" data-w-id="cedbbe73-c293-7211-b008-a9702e124b77"
+        data-wf-id="[&quot;cedbbe73-c293-7211-b008-a9702e124b77&quot;]" href="http://www.theafterschoolcookieclub.com"
+        class="link-2">Know More</a>
+    </div>
+  </div>
+  </div>
+</body>
+
+</html>
