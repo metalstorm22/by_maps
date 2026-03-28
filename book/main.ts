@@ -78,6 +78,8 @@ const usesManagedTouchGestures = (): boolean => {
   return window.matchMedia('(any-pointer: coarse)').matches;
 };
 
+let lastManagedTouchTapAt = 0;
+
 type Space = {
   name: string;
   squareFootage: number;
@@ -224,7 +226,15 @@ class EmbeddedMapGestures {
   private readonly hint: HTMLElement;
   private hintTimeout: number | null = null;
   private lastWheelEventTime = 0;
+  private readonly activeTouchPointers = new Map<number, { clientX: number; clientY: number }>();
+  private tapCandidate: {
+    pointerId: number;
+    startX: number;
+    startY: number;
+    startedAt: number;
+  } | null = null;
   private singleFingerStart: { x: number; y: number } | null = null;
+  private singleFingerStartedAt: number | null = null;
 
   // Two-finger gesture state
   private lastTouchCenter: { x: number; y: number } | null = null;
@@ -233,6 +243,7 @@ class EmbeddedMapGestures {
   constructor(
     private readonly spz: ReturnType<typeof svgPanZoom>,
     private readonly svg: SVGSVGElement,
+    private readonly onScreenTap: (clientX: number, clientY: number) => void,
   ) {
     const element = document.querySelector('#svg-section');
     if (!(element instanceof HTMLElement)) {
@@ -250,13 +261,23 @@ class EmbeddedMapGestures {
     this.hint.textContent = '';
 
     this.element.addEventListener('wheel', this.handleWheel, { passive: false });
-    this.element.addEventListener('touchstart', this.handleTouchStart, { passive: false });
-    this.element.addEventListener('touchmove', this.handleTouchMove, { passive: false });
-    this.element.addEventListener('touchend', this.handleTouchEnd, { passive: true });
-    this.element.addEventListener('touchcancel', this.handleTouchEnd, { passive: true });
-    this.element.addEventListener('gesturestart', this.preventSafariGesture, { passive: false });
-    this.element.addEventListener('gesturechange', this.preventSafariGesture, { passive: false });
-    this.element.addEventListener('gestureend', this.preventSafariGesture, { passive: false });
+    if (usesManagedTouchGestures()) {
+      if (typeof window.PointerEvent === 'function') {
+        this.element.addEventListener('pointerdown', this.handlePointerDown, { passive: false });
+        this.element.addEventListener('pointermove', this.handlePointerMove, { passive: false });
+        this.element.addEventListener('pointerup', this.handlePointerUpOrCancel, { passive: false });
+        this.element.addEventListener('pointercancel', this.handlePointerUpOrCancel, { passive: false });
+      } else {
+        this.element.addEventListener('touchstart', this.handleTouchStart, { passive: false });
+        this.element.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+        this.element.addEventListener('touchend', this.handleTouchEnd, { passive: false });
+        this.element.addEventListener('touchcancel', this.handleTouchEnd, { passive: false });
+      }
+
+      this.element.addEventListener('gesturestart', this.preventSafariGesture, { passive: false });
+      this.element.addEventListener('gesturechange', this.preventSafariGesture, { passive: false });
+      this.element.addEventListener('gestureend', this.preventSafariGesture, { passive: false });
+    }
   }
 
   private readonly handleWheel = (event: WheelEvent) => {
@@ -295,18 +316,176 @@ class EmbeddedMapGestures {
     this.spz.zoomAtPointBy(zoom, relativePoint);
   };
 
-  private touchCenter(t1: Touch, t2: Touch): { x: number; y: number } {
+  private touchCenter(
+    t1: { clientX: number; clientY: number },
+    t2: { clientX: number; clientY: number },
+  ): { x: number; y: number } {
     return { x: (t1.clientX + t2.clientX) / 2, y: (t1.clientY + t2.clientY) / 2 };
   }
 
-  private touchDist(t1: Touch, t2: Touch): number {
+  private touchDist(
+    t1: { clientX: number; clientY: number },
+    t2: { clientX: number; clientY: number },
+  ): number {
     return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
   }
 
+  private isSvgEventTarget(target: EventTarget | null): boolean {
+    return target instanceof Node && (target === this.svg || this.svg.contains(target));
+  }
+
+  private getActiveTouchPair(): [
+    { clientX: number; clientY: number },
+    { clientX: number; clientY: number },
+  ] | null {
+    const activePointers = Array.from(this.activeTouchPointers.values());
+    if (activePointers.length < 2) {
+      return null;
+    }
+
+    return [activePointers[0], activePointers[1]];
+  }
+
+  private triggerManagedTap(clientX: number, clientY: number): void {
+    lastManagedTouchTapAt = Date.now();
+    this.onScreenTap(clientX, clientY);
+  }
+
+  private readonly handlePointerDown = (event: PointerEvent) => {
+    if (event.pointerType !== 'touch' || !this.isSvgEventTarget(event.target)) {
+      return;
+    }
+
+    this.activeTouchPointers.set(event.pointerId, {
+      clientX: event.clientX,
+      clientY: event.clientY,
+    });
+
+    if (this.activeTouchPointers.size === 1) {
+      this.tapCandidate = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        startedAt: Date.now(),
+      };
+      this.lastTouchCenter = null;
+      this.lastTouchDist = null;
+      return;
+    }
+
+    if (this.activeTouchPointers.size >= 2) {
+      event.preventDefault();
+      this.tapCandidate = null;
+      const activePair = this.getActiveTouchPair();
+      if (activePair === null) {
+        return;
+      }
+
+      this.lastTouchCenter = this.touchCenter(activePair[0], activePair[1]);
+      this.lastTouchDist = this.touchDist(activePair[0], activePair[1]);
+    }
+  };
+
+  private readonly handlePointerMove = (event: PointerEvent) => {
+    if (event.pointerType !== 'touch' || !this.activeTouchPointers.has(event.pointerId)) {
+      return;
+    }
+
+    this.activeTouchPointers.set(event.pointerId, {
+      clientX: event.clientX,
+      clientY: event.clientY,
+    });
+
+    if (this.activeTouchPointers.size === 1 && this.tapCandidate?.pointerId === event.pointerId) {
+      const dist = Math.hypot(
+        event.clientX - this.tapCandidate.startX,
+        event.clientY - this.tapCandidate.startY,
+      );
+      if (dist > 12) {
+        this.showHint('Use two fingers to move the map');
+        this.tapCandidate = null;
+      }
+      return;
+    }
+
+    if (this.activeTouchPointers.size >= 2) {
+      event.preventDefault();
+      const activePair = this.getActiveTouchPair();
+      if (activePair === null) {
+        return;
+      }
+
+      const center = this.touchCenter(activePair[0], activePair[1]);
+      const dist = this.touchDist(activePair[0], activePair[1]);
+
+      if (this.lastTouchCenter !== null) {
+        this.spz.panBy({
+          x: center.x - this.lastTouchCenter.x,
+          y: center.y - this.lastTouchCenter.y,
+        });
+      }
+
+      if (this.lastTouchDist !== null && this.lastTouchDist > 0) {
+        const scale = dist / this.lastTouchDist;
+        if (Math.abs(scale - 1) > 0.01) {
+          const inverseScreenCTM = this.svg.getScreenCTM()?.inverse();
+          if (inverseScreenCTM) {
+            const point = this.svg.createSVGPoint();
+            point.x = center.x;
+            point.y = center.y;
+            this.spz.zoomAtPointBy(scale, point.matrixTransform(inverseScreenCTM));
+          }
+        }
+      }
+
+      this.lastTouchCenter = center;
+      this.lastTouchDist = dist;
+    }
+  };
+
+  private readonly handlePointerUpOrCancel = (event: PointerEvent) => {
+    if (event.pointerType !== 'touch' || !this.activeTouchPointers.has(event.pointerId)) {
+      return;
+    }
+
+    const tapCandidate = this.tapCandidate;
+    this.activeTouchPointers.delete(event.pointerId);
+
+    if (this.activeTouchPointers.size < 2) {
+      this.lastTouchCenter = null;
+      this.lastTouchDist = null;
+    }
+
+    if (
+      event.type === 'pointerup'
+      && tapCandidate !== null
+      && tapCandidate.pointerId === event.pointerId
+      && this.activeTouchPointers.size === 0
+    ) {
+      const elapsed = Date.now() - tapCandidate.startedAt;
+      const dist = Math.hypot(
+        event.clientX - tapCandidate.startX,
+        event.clientY - tapCandidate.startY,
+      );
+      if (elapsed <= 400 && dist <= 12) {
+        this.triggerManagedTap(event.clientX, event.clientY);
+      }
+    }
+
+    if (this.activeTouchPointers.size === 0) {
+      this.tapCandidate = null;
+    }
+  };
+
   private readonly handleTouchStart = (event: TouchEvent) => {
+    if (!this.isSvgEventTarget(event.target)) {
+      return;
+    }
+
     if (event.touches.length === 1) {
       const touch = event.touches[0];
       this.singleFingerStart = { x: touch.clientX, y: touch.clientY };
+      this.singleFingerStartedAt = Date.now();
       this.lastTouchCenter = null;
       this.lastTouchDist = null;
       return;
@@ -371,12 +550,30 @@ class EmbeddedMapGestures {
   };
 
   private readonly handleTouchEnd = (event: TouchEvent) => {
+    if (
+      event.touches.length === 0
+      && this.singleFingerStart !== null
+      && this.singleFingerStartedAt !== null
+      && event.changedTouches.length > 0
+    ) {
+      const touch = event.changedTouches[0];
+      const elapsed = Date.now() - this.singleFingerStartedAt;
+      const dist = Math.hypot(
+        touch.clientX - this.singleFingerStart.x,
+        touch.clientY - this.singleFingerStart.y,
+      );
+      if (elapsed <= 400 && dist <= 12) {
+        this.triggerManagedTap(touch.clientX, touch.clientY);
+      }
+    }
+
     if (event.touches.length < 2) {
       this.lastTouchCenter = null;
       this.lastTouchDist = null;
     }
     if (event.touches.length === 0) {
       this.singleFingerStart = null;
+      this.singleFingerStartedAt = null;
     }
   };
 
@@ -817,6 +1014,10 @@ class Unit {
     path.dataset.bookingUnit = 'true';
 
     path.addEventListener('click', (e) => {
+      if (Date.now() - lastManagedTouchTapAt < 800) {
+        e.preventDefault();
+        return;
+      }
       this.handleTap(e.clientX, e.clientY);
     });
 
@@ -1103,52 +1304,12 @@ class Ctx {
     this.spaceCard.hide();
     this.unitLabels.syncState();
     this.syncFilterControls();
+  }
 
-    // Mobile tap detection — svg-pan-zoom swallows touch/click on mobile,
-    // so we detect taps globally on the SVG section and hit-test against unit paths.
-    if (usesManagedTouchGestures()) {
-      const section = document.querySelector('#svg-section');
-      if (section) {
-        let tapInfo: { x: number; y: number; time: number; fingers: number } | null = null;
-
-        section.addEventListener('touchstart', (e) => {
-          const te = e as TouchEvent;
-          if (te.touches.length === 1) {
-            const t = te.touches[0];
-            tapInfo = { x: t.clientX, y: t.clientY, time: Date.now(), fingers: 1 };
-          } else {
-            // Multi-finger — cancel tap
-            tapInfo = null;
-          }
-        }, { passive: true });
-
-        section.addEventListener('touchmove', (e) => {
-          if (tapInfo === null) return;
-          const te = e as TouchEvent;
-          if (te.touches.length !== 1) { tapInfo = null; return; }
-          const t = te.touches[0];
-          if (Math.hypot(t.clientX - tapInfo.x, t.clientY - tapInfo.y) > 10) {
-            tapInfo = null;
-          }
-        }, { passive: true });
-
-        section.addEventListener('touchend', (e) => {
-          if (tapInfo === null) return;
-          const te = e as TouchEvent;
-          const elapsed = Date.now() - tapInfo.time;
-          const ct = te.changedTouches[0];
-          const dist = Math.hypot(ct.clientX - tapInfo.x, ct.clientY - tapInfo.y);
-          const info = tapInfo;
-          tapInfo = null;
-
-          if (elapsed > 400 || dist > 15) return;
-
-          const tappedUnit = this.getUnitFromScreenPoint(info.x, info.y);
-          if (tappedUnit !== null) {
-            tappedUnit.handleTap(info.x, info.y);
-          }
-        }, { passive: true });
-      }
+  public handleScreenTap(clientX: number, clientY: number): void {
+    const tappedUnit = this.getUnitFromScreenPoint(clientX, clientY);
+    if (tappedUnit !== null) {
+      tappedUnit.handleTap(clientX, clientY);
     }
   }
 
@@ -1345,15 +1506,10 @@ const main = async () => {
     center: true,
     mouseWheelZoomEnabled: false,
     dblClickZoomEnabled: !isTouchDevice,
-    // On touch devices, disable built-in panning so single-finger
-    // synthetic mouse events don't pan the map (allows page scroll).
-    panEnabled: !isTouchDevice,
-    // Remove svg-pan-zoom's touch AND mouse handlers on touch devices
-    // so we can handle two-finger pan/zoom ourselves.
+    panEnabled: true,
     customEventsHandler: isTouchDevice ? {
       haltEventListeners: [
         'touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel',
-        'mousedown', 'mouseup', 'mousemove', 'mouseleave',
       ],
       init: () => {},
       destroy: () => {},
@@ -1367,8 +1523,10 @@ const main = async () => {
   });
 
   new ZoomControls(spz);
-  new EmbeddedMapGestures(spz, svg);
   ctx = new Ctx(spz, svg, json);
+  new EmbeddedMapGestures(spz, svg, (clientX, clientY) => {
+    ctx?.handleScreenTap(clientX, clientY);
+  });
 
 };
 
