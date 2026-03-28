@@ -6560,7 +6560,6 @@
       center: true,
       mouseWheelZoomEnabled: false,
       dblClickZoomEnabled: true,
-      preventMouseEventsDefault: false,
       onPan: () => {
         ctx?.scheduleLabelUpdate();
       },
