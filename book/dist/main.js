@@ -6193,30 +6193,8 @@
       this.title = title;
       __publicField(this, "isAvailable", true);
       __publicField(this, "isSelected", false);
-      const handleSelect = (clientX, clientY) => {
-        const current = this.ctx.spz.getPan();
-        const rect = ctx.svgContainer.getBoundingClientRect();
-        const width = ctx.svgContainer.clientWidth;
-        const height = ctx.svgContainer.clientHeight;
-        const pointerX = clientX - rect.left;
-        const pointerY = clientY - rect.top;
-        const targetX = current.x + width / 2 - pointerX;
-        const targetY = current.y + height / 2 - pointerY;
-        animatePanTo(this.ctx.spz, current.x, current.y, targetX, targetY);
-        ctx.handleUnitPointerDown(this);
-      };
-      let tapStart = null;
-      path.addEventListener("pointerdown", (e) => {
-        tapStart = { x: e.clientX, y: e.clientY, time: Date.now() };
-      });
-      path.addEventListener("pointerup", (e) => {
-        if (tapStart === null) return;
-        const elapsed = Date.now() - tapStart.time;
-        const dist = Math.hypot(e.clientX - tapStart.x, e.clientY - tapStart.y);
-        tapStart = null;
-        if (elapsed < 300 && dist < 15) {
-          handleSelect(e.clientX, e.clientY);
-        }
+      path.addEventListener("click", (e) => {
+        this.handleTap(e.clientX, e.clientY);
       });
       path.addEventListener("pointerover", () => {
         ctx.handleUnitPointerOver(this);
@@ -6224,6 +6202,18 @@
       path.addEventListener("pointerleave", () => {
         ctx.handleUnitPointerLeave(this);
       });
+    }
+    handleTap(clientX, clientY) {
+      const current = this.ctx.spz.getPan();
+      const rect = this.ctx.svgContainer.getBoundingClientRect();
+      const width = this.ctx.svgContainer.clientWidth;
+      const height = this.ctx.svgContainer.clientHeight;
+      const pointerX = clientX - rect.left;
+      const pointerY = clientY - rect.top;
+      const targetX = current.x + width / 2 - pointerX;
+      const targetY = current.y + height / 2 - pointerY;
+      animatePanTo(this.ctx.spz, current.x, current.y, targetX, targetY);
+      this.ctx.handleUnitPointerDown(this);
     }
     highlight(highlight) {
       this.path.classList.toggle("unit-highlighted", highlight);
@@ -6440,6 +6430,53 @@
       this.spaceCard.hide();
       this.unitLabels.syncState();
       this.syncFilterControls();
+      if ("ontouchstart" in window) {
+        const section = document.querySelector("#svg-section");
+        if (section) {
+          let tapInfo = null;
+          section.addEventListener("touchstart", (e) => {
+            const te = e;
+            if (te.touches.length === 1) {
+              const t = te.touches[0];
+              tapInfo = { x: t.clientX, y: t.clientY, time: Date.now(), fingers: 1 };
+            } else {
+              tapInfo = null;
+            }
+          }, { passive: true });
+          section.addEventListener("touchmove", (e) => {
+            if (tapInfo === null) return;
+            const te = e;
+            if (te.touches.length !== 1) {
+              tapInfo = null;
+              return;
+            }
+            const t = te.touches[0];
+            if (Math.hypot(t.clientX - tapInfo.x, t.clientY - tapInfo.y) > 10) {
+              tapInfo = null;
+            }
+          }, { passive: true });
+          section.addEventListener("touchend", (e) => {
+            if (tapInfo === null) return;
+            const te = e;
+            const elapsed = Date.now() - tapInfo.time;
+            const ct = te.changedTouches[0];
+            const dist = Math.hypot(ct.clientX - tapInfo.x, ct.clientY - tapInfo.y);
+            const info = tapInfo;
+            tapInfo = null;
+            if (elapsed > 400 || dist > 15) return;
+            const elements = document.elementsFromPoint(info.x, info.y);
+            for (const el of elements) {
+              if (el instanceof SVGPathElement) {
+                const unit = this.units.units.find((u) => u.path === el);
+                if (unit) {
+                  unit.handleTap(ct.clientX, ct.clientY);
+                  break;
+                }
+              }
+            }
+          }, { passive: true });
+        }
+      }
     }
     handleUnitPointerDown(unit) {
       let wasSelected = false;
