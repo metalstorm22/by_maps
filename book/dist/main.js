@@ -5648,6 +5648,9 @@
   var UNIT_LABEL_MAX_OFFSET_STEPS = 3;
   var USE_WEIGHTED_UNIT_LABEL_CENTER = true;
   var UNIT_LABEL_CENTER_SAMPLE_STEPS = 12;
+  var MAP_MIN_ZOOM = 1;
+  var MAP_MAX_ZOOM = 6;
+  var MAP_PAN_GUTTER = 24;
   var usesManagedTouchGestures = () => {
     if (navigator.maxTouchPoints > 0) {
       return true;
@@ -5675,6 +5678,17 @@
     const width = getResponsiveViewportWidth();
     root.classList.toggle("booking-layout-tablet", width <= TABLET_LAYOUT_MAX_WIDTH);
     root.classList.toggle("booking-layout-mobile", width <= MOBILE_LAYOUT_MAX_WIDTH);
+  };
+  var clampMapPan = function(_oldPan, newPan) {
+    const sizes = this.getSizes();
+    const leftLimit = -((sizes.viewBox.x + sizes.viewBox.width) * sizes.realZoom) + MAP_PAN_GUTTER;
+    const rightLimit = sizes.width - MAP_PAN_GUTTER - sizes.viewBox.x * sizes.realZoom;
+    const topLimit = -((sizes.viewBox.y + sizes.viewBox.height) * sizes.realZoom) + MAP_PAN_GUTTER;
+    const bottomLimit = sizes.height - MAP_PAN_GUTTER - sizes.viewBox.y * sizes.realZoom;
+    return {
+      x: Math.max(leftLimit, Math.min(rightLimit, newPan.x)),
+      y: Math.max(topLimit, Math.min(bottomLimit, newPan.y))
+    };
   };
   var Spaces = class {
     constructor() {
@@ -6083,6 +6097,10 @@
         point.x = center.x;
         point.y = center.y;
         const screenPoint = point.matrixTransform(screenCTM);
+        const labelMetrics = this.getLabelMetrics(screenCTM);
+        label.style.setProperty("--unit-label-font-size", `${labelMetrics.fontSize}px`);
+        label.style.setProperty("--unit-label-stroke-width", `${labelMetrics.strokeWidth}px`);
+        label.style.setProperty("--unit-label-shadow-offset", `${labelMetrics.shadowOffset}px`);
         const centerX = screenPoint.x - sectionRect.left;
         const centerY = screenPoint.y - sectionRect.top;
         const labelWidth = label.offsetWidth;
@@ -6131,6 +6149,14 @@
         this.updateArrow(label, centerX - placedX, centerY - placedY, isOutsideShape);
         occupiedRects.push(placedRect);
       }
+    }
+    getLabelMetrics(screenCTM) {
+      const zoomScale = Math.max(Math.hypot(screenCTM.a, screenCTM.b), 0.25);
+      const zoomDelta = Math.log2(zoomScale);
+      const fontSize = Math.min(12, Math.max(8.75, 9.5 + zoomDelta * 0.9));
+      const strokeWidth = Math.min(1.35, Math.max(0.7, 0.9 + zoomDelta * 0.16));
+      const shadowOffset = Math.min(1.5, Math.max(0.75, 0.95 + zoomDelta * 0.18));
+      return { fontSize, shadowOffset, strokeWidth };
     }
     computeUnitLabelCenter(unit) {
       const bbox = unit.path.getBBox();
@@ -6816,11 +6842,14 @@
     const spz = (0, import_svg_pan_zoom.default)(svg, {
       zoomEnabled: true,
       controlIconsEnabled: false,
+      minZoom: MAP_MIN_ZOOM,
+      maxZoom: MAP_MAX_ZOOM,
       fit: true,
       center: true,
       mouseWheelZoomEnabled: false,
       dblClickZoomEnabled: !isTouchDevice,
       panEnabled: !isTouchDevice,
+      beforePan: clampMapPan,
       customEventsHandler: isTouchDevice ? {
         haltEventListeners: [
           "touchstart",
