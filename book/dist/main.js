@@ -6279,14 +6279,14 @@
         closeButton.addEventListener("pointerup", () => {
           if (closeDown) {
             closeDown = false;
-            this.hide();
+            this.ctx.handleSpaceCardClose();
           }
         }, { passive: true });
         closeButton.addEventListener("pointercancel", () => {
           closeDown = false;
         }, { passive: true });
         closeButton.addEventListener("click", () => {
-          this.hide();
+          this.ctx.handleSpaceCardClose();
         });
       }
     }
@@ -6647,6 +6647,16 @@
       } else {
         this.enquiryGeneralForm.hide();
       }
+      this.unitLabels.syncState();
+    }
+    handleSpaceCardClose() {
+      for (const unit of this.units.units) {
+        if (unit.isSelected) {
+          unit.select(false);
+        }
+      }
+      this.spaceCard.hide();
+      this.enquiryGeneralForm.show();
       this.unitLabels.syncState();
     }
     handleUnitPointerOver(unit) {

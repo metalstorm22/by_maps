@@ -859,12 +859,12 @@ class SpaceCard {
       closeButton.addEventListener('pointerup', () => {
         if (closeDown) {
           closeDown = false;
-          this.hide();
+          this.ctx.handleSpaceCardClose();
         }
       }, { passive: true });
       closeButton.addEventListener('pointercancel', () => { closeDown = false; }, { passive: true });
       // Keep click as fallback for desktop
-      closeButton.addEventListener('click', () => { this.hide(); });
+      closeButton.addEventListener('click', () => { this.ctx.handleSpaceCardClose(); });
     }
   }
 
@@ -1305,6 +1305,18 @@ class Ctx {
     } else {
       this.enquiryGeneralForm.hide();
     }
+    this.unitLabels.syncState();
+  }
+
+  public handleSpaceCardClose() {
+    for (const unit of this.units.units) {
+      if (unit.isSelected) {
+        unit.select(false);
+      }
+    }
+
+    this.spaceCard.hide();
+    this.enquiryGeneralForm.show();
     this.unitLabels.syncState();
   }
 
