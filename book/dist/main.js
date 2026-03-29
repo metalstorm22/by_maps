@@ -5637,6 +5637,11 @@
       console.log("[LiveReload] Error:", error);
     };
   }
+  var EMPTY_SHEET_DATA = {
+    table: {
+      rows: []
+    }
+  };
   var BOOKING_SHEET_ID = "19OJPsW20-DwhbuRuvcjMKAwSjpumDMQuiX20XonZ6Nc";
   var UNIT_LABEL_OVERLAP_PADDING = 6;
   var UNIT_LABEL_OFFSET_STEP = 18;
@@ -5746,6 +5751,40 @@
         this.element.classList.remove("booking-toast-visible");
         this.hideTimeout = null;
       }, 2600);
+    }
+  };
+  var AvailabilityStatus = class {
+    constructor() {
+      __publicField(this, "element");
+      const parent = document.querySelector("#svg-section");
+      if (!(parent instanceof HTMLElement)) {
+        throw new Error("SVG section not HTMLElement");
+      }
+      let element = document.querySelector("#booking-availability-status");
+      if (!(element instanceof HTMLElement)) {
+        element = document.createElement("div");
+        element.id = "booking-availability-status";
+        parent.appendChild(element);
+      }
+      this.element = element;
+    }
+    showLoading() {
+      this.element.textContent = "Loading availability...";
+      this.element.classList.add("booking-availability-status-visible");
+      this.element.classList.remove("booking-availability-status-warning");
+    }
+    showWarning() {
+      this.element.textContent = "Live availability unavailable";
+      this.element.classList.add(
+        "booking-availability-status-visible",
+        "booking-availability-status-warning"
+      );
+    }
+    hide() {
+      this.element.classList.remove(
+        "booking-availability-status-visible",
+        "booking-availability-status-warning"
+      );
     }
   };
   var ZoomControls = class {
@@ -6530,6 +6569,7 @@
       __publicField(this, "hasInvalidPastDateSelection", false);
       __publicField(this, "minimumSpace", 0);
       __publicField(this, "maximumSpace", Infinity);
+      __publicField(this, "activeDateRange", null);
       this.parsedSheet = new ParsedSheet(sheetData);
       const labelledPaths = svgContainer.querySelectorAll("path");
       this.units = new Units(this, labelledPaths);
@@ -6586,6 +6626,7 @@
     }
     handleRangePick(startDate, endDate) {
       this.hasDateFilter = true;
+      this.activeDateRange = { startDate, endDate };
       const today = (0, import_moment.default)().startOf("day");
       const hasInvalidPastDateSelection = startDate.clone().startOf("day").isBefore(today);
       if (hasInvalidPastDateSelection && !this.hasInvalidPastDateSelection) {
@@ -6599,6 +6640,7 @@
     handleRangeClear() {
       this.hasDateFilter = false;
       this.hasInvalidPastDateSelection = false;
+      this.activeDateRange = null;
       this.parsedSheet.resetAvailable();
       this.update();
     }
@@ -6635,8 +6677,22 @@
       this.hasInvalidPastDateSelection = false;
       this.minimumSpace = 0;
       this.maximumSpace = Infinity;
+      this.activeDateRange = null;
       this.parsedSheet.resetAvailable();
       this.update();
+    }
+    applySheetData(sheetData) {
+      this.parsedSheet = new ParsedSheet(sheetData);
+      if (this.activeDateRange !== null) {
+        this.parsedSheet.updateAvailable(
+          this.activeDateRange.startDate,
+          this.activeDateRange.endDate
+        );
+      }
+      this.update();
+    }
+    showAvailabilityLoadError() {
+      this.bookingToast.show("Live availability could not be loaded.");
     }
     scheduleLabelUpdate() {
       this.unitLabels.scheduleUpdate();
@@ -6692,12 +6748,16 @@
       return null;
     }
   };
-  var main = async () => {
+  var fetchSheetData = async () => {
     const url = `https://docs.google.com/spreadsheets/d/${BOOKING_SHEET_ID}/gviz/tq?tqx=out:json`;
     const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`Booking sheet request failed with status ${res.status}`);
+    }
     const text = await res.text();
-    const json = JSON.parse(text.substring(47).slice(0, -2));
-    console.log(json);
+    return JSON.parse(text.substring(47).slice(0, -2));
+  };
+  var main = () => {
     const svgContainer = document.querySelector("#svg");
     if (svgContainer === null) throw new Error("No SVG container");
     svgContainer.innerHTML = map_layer_compressed_default;
@@ -6745,9 +6805,19 @@
       }
     });
     new ZoomControls(spz);
-    ctx = new Ctx(spz, svg, json);
+    const availabilityStatus = new AvailabilityStatus();
+    availabilityStatus.showLoading();
+    ctx = new Ctx(spz, svg, EMPTY_SHEET_DATA);
     new EmbeddedMapGestures(spz, svg, (target, clientX, clientY) => {
       ctx?.handleScreenTap(target, clientX, clientY);
+    });
+    void fetchSheetData().then((sheetData) => {
+      ctx?.applySheetData(sheetData);
+      availabilityStatus.hide();
+    }).catch((error) => {
+      console.warn("Failed to load booking availability", error);
+      availabilityStatus.showWarning();
+      ctx?.showAvailabilityLoadError();
     });
   };
   document.addEventListener("DOMContentLoaded", (_event) => {

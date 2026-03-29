@@ -126,6 +126,35 @@ html {
   transform: translate(-50%, 0);
 }
 
+#booking-availability-status {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 4;
+  padding: 8px 12px;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111111;
+  font: 500 12px/1.2 Rubik, sans-serif;
+  letter-spacing: 0.01em;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+#booking-availability-status.booking-availability-status-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#booking-availability-status.booking-availability-status-warning {
+  background: rgba(17, 17, 17, 0.88);
+  color: #ffffff;
+}
+
 .daterangepicker {
   z-index: 30 !important;
 }
@@ -496,6 +525,12 @@ html {
     max-width: calc(100vw - 120px);
     font-size: 12px;
     text-align: center;
+  }
+
+  #booking-availability-status {
+    right: 12px;
+    bottom: 12px;
+    font-size: 11px;
   }
 
   .unit-label-pill {

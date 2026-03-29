@@ -54,6 +54,11 @@ type SheetData = {
   }
 }
 
+const EMPTY_SHEET_DATA: SheetData = {
+  table: {
+    rows: [],
+  },
+};
 
 const BOOKING_SHEET_ID = '19OJPsW20-DwhbuRuvcjMKAwSjpumDMQuiX20XonZ6Nc';
 const UNIT_LABEL_OVERLAP_PADDING = 6;
@@ -198,6 +203,47 @@ class BookingToast {
       this.element.classList.remove('booking-toast-visible');
       this.hideTimeout = null;
     }, 2600);
+  }
+}
+
+class AvailabilityStatus {
+  private readonly element: HTMLElement;
+
+  constructor() {
+    const parent = document.querySelector('#svg-section');
+    if (!(parent instanceof HTMLElement)) {
+      throw new Error('SVG section not HTMLElement');
+    }
+
+    let element = document.querySelector('#booking-availability-status');
+    if (!(element instanceof HTMLElement)) {
+      element = document.createElement('div');
+      element.id = 'booking-availability-status';
+      parent.appendChild(element);
+    }
+
+    this.element = element;
+  }
+
+  public showLoading(): void {
+    this.element.textContent = 'Loading availability...';
+    this.element.classList.add('booking-availability-status-visible');
+    this.element.classList.remove('booking-availability-status-warning');
+  }
+
+  public showWarning(): void {
+    this.element.textContent = 'Live availability unavailable';
+    this.element.classList.add(
+      'booking-availability-status-visible',
+      'booking-availability-status-warning',
+    );
+  }
+
+  public hide(): void {
+    this.element.classList.remove(
+      'booking-availability-status-visible',
+      'booking-availability-status-warning',
+    );
   }
 }
 
@@ -1154,7 +1200,7 @@ class ParsedSheet {
 
 class Ctx {
   private readonly units: Units;
-  private readonly parsedSheet: ParsedSheet;
+  private parsedSheet: ParsedSheet;
   private readonly form = new Form();
   private readonly spaces = new Spaces();
   private readonly spaceCard = new SpaceCard(this);
@@ -1167,6 +1213,7 @@ class Ctx {
   private hasInvalidPastDateSelection = false;
   private minimumSpace: number = 0;
   private maximumSpace: number = Infinity;
+  private activeDateRange: { startDate: moment.Moment; endDate: moment.Moment } | null = null;
 
   constructor(public readonly spz: ReturnType<typeof svgPanZoom>, public readonly svgContainer: SVGSVGElement, sheetData: SheetData) {
     this.parsedSheet = new ParsedSheet(sheetData);
@@ -1230,6 +1277,7 @@ class Ctx {
 
   public handleRangePick(startDate: moment.Moment, endDate: moment.Moment) {
     this.hasDateFilter = true;
+    this.activeDateRange = { startDate, endDate };
     const today = moment().startOf('day');
     const hasInvalidPastDateSelection = startDate.clone().startOf('day').isBefore(today);
     if (hasInvalidPastDateSelection && !this.hasInvalidPastDateSelection) {
@@ -1244,6 +1292,7 @@ class Ctx {
   public handleRangeClear() {
     this.hasDateFilter = false;
     this.hasInvalidPastDateSelection = false;
+    this.activeDateRange = null;
     this.parsedSheet.resetAvailable();
     this.update();
   }
@@ -1292,8 +1341,26 @@ class Ctx {
     this.hasInvalidPastDateSelection = false;
     this.minimumSpace = 0;
     this.maximumSpace = Infinity;
+    this.activeDateRange = null;
     this.parsedSheet.resetAvailable();
     this.update();
+  }
+
+  public applySheetData(sheetData: SheetData) {
+    this.parsedSheet = new ParsedSheet(sheetData);
+
+    if (this.activeDateRange !== null) {
+      this.parsedSheet.updateAvailable(
+        this.activeDateRange.startDate,
+        this.activeDateRange.endDate,
+      );
+    }
+
+    this.update();
+  }
+
+  public showAvailabilityLoadError(): void {
+    this.bookingToast.show('Live availability could not be loaded.');
   }
 
   public scheduleLabelUpdate() {
@@ -1370,15 +1437,18 @@ class Ctx {
 
 }
 
-const main = async () => {
-
+const fetchSheetData = async (): Promise<SheetData> => {
   const url = `https://docs.google.com/spreadsheets/d/${BOOKING_SHEET_ID}/gviz/tq?tqx=out:json`;
-
   const res = await fetch(url);
-  const text = await res.text();
-  const json = JSON.parse(text.substring(47).slice(0, -2)) as SheetData;
-  console.log(json);
+  if (!res.ok) {
+    throw new Error(`Booking sheet request failed with status ${res.status}`);
+  }
 
+  const text = await res.text();
+  return JSON.parse(text.substring(47).slice(0, -2)) as SheetData;
+};
+
+const main = () => {
   const svgContainer = document.querySelector('#svg');
   if (svgContainer === null) throw new Error('No SVG container');
   svgContainer.innerHTML = svgUrl;
@@ -1416,10 +1486,24 @@ const main = async () => {
   });
 
   new ZoomControls(spz);
-  ctx = new Ctx(spz, svg, json);
+  const availabilityStatus = new AvailabilityStatus();
+  availabilityStatus.showLoading();
+
+  ctx = new Ctx(spz, svg, EMPTY_SHEET_DATA);
   new EmbeddedMapGestures(spz, svg, (target, clientX, clientY) => {
     ctx?.handleScreenTap(target, clientX, clientY);
   });
+
+  void fetchSheetData()
+    .then((sheetData) => {
+      ctx?.applySheetData(sheetData);
+      availabilityStatus.hide();
+    })
+    .catch((error: unknown) => {
+      console.warn('Failed to load booking availability', error);
+      availabilityStatus.showWarning();
+      ctx?.showAvailabilityLoadError();
+    });
 
 };
 
