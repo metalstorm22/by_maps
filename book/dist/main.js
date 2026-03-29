@@ -5875,13 +5875,49 @@
           return;
         }
         if (event.touches.length >= 2) {
+          if (event.target instanceof Node && !this.svg.contains(event.target)) {
+            return;
+          }
+          event.preventDefault();
           this.tapCandidate = null;
-          this.lastTouchCenter = null;
-          this.lastTouchDist = null;
-          this.showHint("Use the zoom buttons to inspect the map");
+          this.lastTouchCenter = this.touchCenter(event.touches[0], event.touches[1]);
+          this.lastTouchDist = Math.max(this.touchDist(event.touches[0], event.touches[1]), 1);
         }
       });
       __publicField(this, "handleTouchMove", (event) => {
+        if (event.touches.length >= 2) {
+          if (event.target instanceof Node && !this.svg.contains(event.target)) {
+            return;
+          }
+          event.preventDefault();
+          const touchA = event.touches[0];
+          const touchB = event.touches[1];
+          const center = this.touchCenter(touchA, touchB);
+          const distance = Math.max(this.touchDist(touchA, touchB), 1);
+          if (this.lastTouchCenter !== null && this.lastTouchDist !== null) {
+            const inverseScreenCTM = this.svg.getScreenCTM()?.inverse();
+            if (inverseScreenCTM !== void 0) {
+              const point = this.svg.createSVGPoint();
+              point.x = center.x;
+              point.y = center.y;
+              const relativePoint = point.matrixTransform(inverseScreenCTM);
+              const zoom = distance / this.lastTouchDist;
+              if (Number.isFinite(zoom) && zoom > 0 && Math.abs(zoom - 1) > 1e-3) {
+                this.spz.zoomAtPointBy(zoom, relativePoint);
+              }
+              const currentPan = this.spz.getPan();
+              const dx = center.x - this.lastTouchCenter.x;
+              const dy = center.y - this.lastTouchCenter.y;
+              this.spz.pan({
+                x: currentPan.x + dx,
+                y: currentPan.y + dy
+              });
+            }
+          }
+          this.lastTouchCenter = center;
+          this.lastTouchDist = distance;
+          return;
+        }
         if (event.touches.length === 1 && this.tapCandidate !== null) {
           const touch = event.touches[0];
           const dist = Math.hypot(
@@ -5889,7 +5925,7 @@
             touch.clientY - this.tapCandidate.startY
           );
           if (dist > 12) {
-            this.showHint("Use two fingers to move the map");
+            this.showHint("Use two fingers to pan and zoom");
             this.tapCandidate = null;
           }
           return;

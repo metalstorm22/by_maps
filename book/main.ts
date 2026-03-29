@@ -412,14 +412,60 @@ class EmbeddedMapGestures {
 
     // Two fingers — start tracking for pan/zoom
     if (event.touches.length >= 2) {
+      if (event.target instanceof Node && !this.svg.contains(event.target)) {
+        return;
+      }
+
+      event.preventDefault();
       this.tapCandidate = null;
-      this.lastTouchCenter = null;
-      this.lastTouchDist = null;
-      this.showHint('Use the zoom buttons to inspect the map');
+      this.lastTouchCenter = this.touchCenter(event.touches[0], event.touches[1]);
+      this.lastTouchDist = Math.max(this.touchDist(event.touches[0], event.touches[1]), 1);
     }
   };
 
   private readonly handleTouchMove = (event: TouchEvent) => {
+    if (event.touches.length >= 2) {
+      if (event.target instanceof Node && !this.svg.contains(event.target)) {
+        return;
+      }
+
+      event.preventDefault();
+
+      const touchA = event.touches[0];
+      const touchB = event.touches[1];
+      const center = this.touchCenter(touchA, touchB);
+      const distance = Math.max(this.touchDist(touchA, touchB), 1);
+
+      if (this.lastTouchCenter !== null && this.lastTouchDist !== null) {
+        const inverseScreenCTM = this.svg.getScreenCTM()?.inverse();
+
+        if (inverseScreenCTM !== undefined) {
+          const point = this.svg.createSVGPoint();
+          point.x = center.x;
+          point.y = center.y;
+
+          const relativePoint = point.matrixTransform(inverseScreenCTM);
+          const zoom = distance / this.lastTouchDist;
+
+          if (Number.isFinite(zoom) && zoom > 0 && Math.abs(zoom - 1) > 0.001) {
+            this.spz.zoomAtPointBy(zoom, relativePoint);
+          }
+
+          const currentPan = this.spz.getPan();
+          const dx = center.x - this.lastTouchCenter.x;
+          const dy = center.y - this.lastTouchCenter.y;
+          this.spz.pan({
+            x: currentPan.x + dx,
+            y: currentPan.y + dy,
+          });
+        }
+      }
+
+      this.lastTouchCenter = center;
+      this.lastTouchDist = distance;
+      return;
+    }
+
     // Single finger drag — show hint, don't pan, let the page scroll naturally.
     if (event.touches.length === 1 && this.tapCandidate !== null) {
       const touch = event.touches[0];
@@ -428,7 +474,7 @@ class EmbeddedMapGestures {
         touch.clientY - this.tapCandidate.startY,
       );
       if (dist > 12) {
-        this.showHint('Use two fingers to move the map');
+        this.showHint('Use two fingers to pan and zoom');
         this.tapCandidate = null;
       }
       return;
