@@ -78,6 +78,27 @@ const usesManagedTouchGestures = (): boolean => {
   return window.matchMedia('(any-pointer: coarse)').matches;
 };
 
+const TABLET_LAYOUT_MAX_WIDTH = 991;
+const MOBILE_LAYOUT_MAX_WIDTH = 767;
+
+const getResponsiveViewportWidth = (): number => {
+  const candidates = [
+    window.innerWidth,
+    window.visualViewport?.width,
+    window.screen?.width,
+  ].filter((value): value is number => typeof value === 'number' && value > 0);
+
+  return candidates.length > 0 ? Math.min(...candidates) : window.innerWidth;
+};
+
+const syncResponsiveLayoutClasses = (): void => {
+  const root = document.documentElement;
+  const width = getResponsiveViewportWidth();
+
+  root.classList.toggle('booking-layout-tablet', width <= TABLET_LAYOUT_MAX_WIDTH);
+  root.classList.toggle('booking-layout-mobile', width <= MOBILE_LAYOUT_MAX_WIDTH);
+};
+
 type Space = {
   name: string;
   squareFootage: number;
@@ -1381,6 +1402,7 @@ const main = async () => {
       haltEventListeners: [
         'touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel',
         'mousedown', 'mouseup', 'mousemove', 'mouseleave',
+        'pointerdown', 'pointerup', 'pointermove', 'pointerleave', 'pointercancel',
       ],
       init: () => {},
       destroy: () => {},
@@ -1402,5 +1424,8 @@ const main = async () => {
 };
 
 document.addEventListener("DOMContentLoaded", (_event) => {
+  syncResponsiveLayoutClasses();
+  window.addEventListener('resize', syncResponsiveLayoutClasses);
+  window.visualViewport?.addEventListener('resize', syncResponsiveLayoutClasses);
   main();
 });
